@@ -7,14 +7,22 @@ public class L1ArrayExercise{
     public static void main(String[] args) throws IOException{
 
         L1ArrayExercise ae = new L1ArrayExercise();
+        boolean done = false;
 
         System.out.println("Welcome to the array builder program");
         int [] numArray = ae.buildArray();
-        ae.printArray(numArray);
+
+        while(!done){
+            System.out.println("What would you like to do?\n1. View array\n2. View array in reverse\n3. Find the average\n4. Find the max value\n5. Find the min value\n6. Search for a specific number\n7. Sort array\n8. Find the sum of the elements\n9. Find the amount of positive numbers");
+
+        }
 
     }
 
-    //the method printArray is used to print the contents of an array with size n in a formatted manner @param: arr --> the given array
+    /*
+     * the method printArray is used to print the contents of an array with size n in a formatted manner 
+     * @param: int[] arr --> the given array
+     */
     public void printArray(int[] arr){
         System.out.print("[");
         int n = arr.length;
@@ -26,6 +34,10 @@ public class L1ArrayExercise{
         System.out.println();
     }
 
+    /*
+     * the method printArrayRev is used to print the contents of an array with size n in reverse and in a formatted manner 
+     * @param: int[] arr --> the given array
+     */
     public void printArrayRev(int [] arr){
         System.out.print("[");
         int n = arr.length;
@@ -37,10 +49,21 @@ public class L1ArrayExercise{
         System.out.println();
     }
 
+    /*
+     * the method average is used to find the average of an array of any size
+     * @param: int[] arr --> the given array
+     * @return: double avg --> the average
+     */
     public double average(int [] arr){
-        return (double)(sumArray(arr) / arr.length);
+        double avg = (double)(sumArray(arr) / arr.length);
+        return avg;
     }
 
+    /*
+     * the method maxValue is used to find the largest value in an array
+     * @param: int[] arr --> the given array
+     * @return: int max --> the largest value
+     */  
     public int maxValue(int [] arr){
         int max = arr[0];
         for(int i = 0; i < arr.length; i++){
@@ -50,7 +73,11 @@ public class L1ArrayExercise{
         }
         return max;
     }
-
+    /*
+     * the method minValue is used to find the smallest value in an array
+     * @param: int[] arr --> the given array
+     * @return: int minValue  --> the smallest value
+     */
     public int minValue(int [] arr){
         int min = arr[0];
         for(int i = 0; i < arr.length; i++){
@@ -61,6 +88,13 @@ public class L1ArrayExercise{
         return min;
     }
 
+    /*
+     * the method search is used to find the positions of a certain number in an array
+     * @param: 
+     * int[] arr --> the given array
+     * int num --> the number to find
+     * @return: int[] positions --> the positions of the number to find
+     */
     public int[] search(int [] arr, int num){
         int frequency = 0;
 
@@ -80,6 +114,10 @@ public class L1ArrayExercise{
         return positions;
     }
 
+    /*
+     * the method sortArray is used to sort an array using the bubble sort method
+     * @param: int[] arr --> the given array
+     */
     public void sortArray(int[]arr){
         for(int i = arr.length - 1; i > 0; i--){
             for(int j = 0; j < i; j++){
@@ -91,7 +129,34 @@ public class L1ArrayExercise{
             }
         }
     }
+    /*
+     * the method sortArrayImproved is used to sort an array using the improved bubble sort method (ends the bubble sort if there are no more swaps to be done)
+     * @param: int[] arr --> the given array
+     */
+    public void sortArrayImproved(int[]arr){
+        boolean swapped = true;
 
+        for(int i = arr.length - 1; i > 0; i--){
+            swapped = false;
+            for(int j = 0; j < i; j++){
+                if(arr[j] > arr[j+1]){
+                    int temp = arr[j];
+                    arr[j] = arr[j+1];
+                    arr[j+1] = temp;
+                    swapped = true;
+                }
+            }
+            if(!swapped){
+                break;
+            }
+        }  
+    }
+
+    /*
+     * the method sumArray is used to find the sum of the array
+     * @param: int[] arr --> the given array
+     * @return: int sum --> the sum of the elements in the array
+     */
     public int sumArray(int[]arr){
         int sum = 0;
         for(int i = 0; i < arr.length; i++){
@@ -100,6 +165,10 @@ public class L1ArrayExercise{
         return sum;
     }
 
+    /*
+     * the method buildArray is used to fill an empty array with int values
+     * @return: int[] arr --> an array with values entered by the user
+     */
     public int[] buildArray() throws IOException{
         System.out.println("What is the size of your array?");
         int n = Integer.parseInt(br.readLine());
@@ -115,6 +184,11 @@ public class L1ArrayExercise{
 
     }
 
+    /*
+     * the method countPos is used to count the number of positive elements in an array
+     * @param: int[] arr --> the given array
+     * @return: int count --> the number of positive elements
+     */
     public int countPos(int [] arr){
         int count = 0;
         for(int i = 0; i < arr.length; i++){
