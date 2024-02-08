@@ -7,11 +7,11 @@ public class L1ArrayExercise {
 
     public static void main(String[] args) throws IOException {
 
-        L1ArrayExercise ae = new L1ArrayExercise();
+        L1ArrayExercise arrayFunction = new L1ArrayExercise();
         boolean done = false;
 
         System.out.println("Welcome to the array builder program");
-        int[] numArray = ae.buildArray();
+        int[] numArray = arrayFunction.buildArray();
 
         while (!done) {
             System.out.println("What would you like to do?\n1. View array\n2. View array in reverse\n3. Find the average\n4. Find the max value\n5. Find the min value\n6. Search for a specific number\n7. Sort array\n8. Find the sum of the elements\n9. Find the amount of positive numbers\n10. Exit");
@@ -19,42 +19,42 @@ public class L1ArrayExercise {
             switch (choice) {
                 case 1:
                     System.out.println("Here is the array");
-                    ae.printArray(numArray);
+                    arrayFunction.printArray(numArray);
                     break;
                 case 2:
                     System.out.println("Here is the array in reverse");
-                    ae.printArrayRev(numArray);
+                    arrayFunction.printArrayRev(numArray);
                     break;
                 case 3:
                     System.out.println("The average of the array is: ");
-                    System.out.println(ae.average(numArray));
+                    System.out.println(arrayFunction.average(numArray));
                     break;
                 case 4:
                     System.out.println("The max value of the array is: ");
-                    System.out.println(ae.maxValue(numArray));
+                    System.out.println(arrayFunction.maxValue(numArray));
                     break;
                 case 5:                    
                     System.out.println("The min value of the array is: ");
-                    System.out.println(ae.minValue(numArray));
+                    System.out.println(arrayFunction.minValue(numArray));
                     break;
                 case 6:
                     System.out.println("What number would you like to search for?");
                     int num = Integer.parseInt(br.readLine());
                     System.out.println(num + " appears at positions: ");
-                    ae.printArray(ae.search(numArray, num));
+                    arrayFunction.printArray(arrayFunction.search(numArray, num));
                     break;
                 case 7:
                     System.out.println("Here is the sorted array: ");
-                    ae.sortArrayImproved(numArray);
-                    ae.printArray(numArray);
+                    arrayFunction.sortArrayImproved(numArray);
+                    arrayFunction.printArray(numArray);
                     break;
                 case 8:
                     System.out.println("The sum of the elements in the array is: ");
-                    System.out.println(ae.sumArray(numArray));
+                    System.out.println(arrayFunction.sumArray(numArray));
                     break;
                 case 9:
                     System.out.println("The amount of positive elements in the array is: ");
-                    System.out.println(ae.countPos(numArray));
+                    System.out.println(arrayFunction.countPos(numArray));
                     break;
                 case 10:
                     System.out.println("bye");
