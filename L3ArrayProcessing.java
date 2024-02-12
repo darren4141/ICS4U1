@@ -12,9 +12,34 @@ public class L3ArrayProcessing{
         final int SIZE = 6;
         final int RANDOMSIZE = 10;
         final int RANDOMMAX = 100;
+        boolean repeat = true;
 
-        arrayProcessing.randomNoDuplicates(RANDOMSIZE, RANDOMMAX);
-        arrayProcessing.noDuplicates(SIZE);
+        while(repeat){        
+            System.out.println("Welcome to the array processing program! What would you like to do: ");
+            System.out.println("1. Build an array with no duplicates\n2. Generate a random array with no duplicates\n3. Exit");
+
+            int choice = Integer.parseInt(br.readLine());
+
+            switch(choice){
+                case 1:
+                    System.out.println("Enter the size of your array: ");
+                    arrayProcessing.noDuplicates(Integer.parseInt(br.readLine()));
+                    break;
+                case 2:
+                    System.out.println("Enter the size of your array: ");
+                    int size = Integer.parseInt(br.readLine());
+                    System.out.println("Enter the maximum value of a random number: ");
+                    int max = Integer.parseInt(br.readLine());
+                    arrayProcessing.randomNoDuplicates(size, max);
+                    break;
+                case 3:
+                    System.out.println("Goodbye");
+                    repeat = false;
+                    break;
+                default:
+                    System.out.println("Please enter a valid value");
+            }
+        }
     }
 
     /*
