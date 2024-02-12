@@ -9,14 +9,22 @@ public class L3ArrayProcessing{
     public static void main(String[]args) throws IOException{
         L3ArrayProcessing arrayProcessing = new L3ArrayProcessing();
 
-        arrayProcessing.randomNoDuplicates(50, 100);
-        arrayProcessing.noDuplicates(6);
+        final int SIZE = 6;
+        final int RANDOMSIZE = 10;
+        final int RANDOMMAX = 100;
+
+        arrayProcessing.randomNoDuplicates(RANDOMSIZE, RANDOMMAX);
+        arrayProcessing.noDuplicates(SIZE);
     }
 
+    /*
+     * the method noDuplicates is used to fill an array with integer values while not allowing duplicates, it prints the values
+     * @param: int size --> size of the array
+     */
     public void noDuplicates(int size) throws IOException{
         int[] nums = new int[size];
         boolean repeat = false;
-        System.out.println("Please enter 6 unique numbers: ");
+        System.out.println("Please enter " + size + " unique numbers: ");
 
         for(int i = 0; i < size; i++){
 
@@ -44,7 +52,19 @@ public class L3ArrayProcessing{
         arrayFunction.printArray(nums);
     }
 
+    /*
+     * the method randomNoDuplicates fills an array with random values while preventing duplicate values
+     * @param:
+     * int size --> the size of the array
+     * int max --> the maximum value of the random numbers
+     */
     public void randomNoDuplicates(int size, int max){
+
+        if(size > max){
+            System.out.println("Error: the array size is too large for the specified maximum");
+            return;
+        }
+
         int[] randNums = new int[size];
         boolean repeat = false;
 
@@ -69,6 +89,5 @@ public class L3ArrayProcessing{
         arrayFunction.printArray(randNums);
 
     }
-
 
 }
