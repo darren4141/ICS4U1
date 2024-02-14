@@ -60,7 +60,7 @@ public class L3ArrayProcessing{
 
             System.out.println("Enter number " + (i+1));
             int num = Integer.parseInt(br.readLine());
-
+            
             for(int j = 0; j < i; j++){
                 if(nums[j] == num){
                     repeat = true;
