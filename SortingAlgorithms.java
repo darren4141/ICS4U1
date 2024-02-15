@@ -20,31 +20,37 @@ public class SortingAlgorithms {
                 case 1:
                     System.out.println("Unsorted array: ");
                     util.printArray(nums);
+                    System.out.println("Sorting....");
                     sort.bubbleSort(nums);
                     break;
                 case 2:
                     System.out.println("Unsorted array:");
-                    util.printArray(nums);
+                    util.printArray(nums);                    
+                    System.out.println("Sorting....");
                     sort.selectionSort(nums);
                     break;
                 case 3:
                     System.out.println("Unsorted array:");
-                    util.printArray(nums);
+                    util.printArray(nums);                    
+                    System.out.println("Sorting....");
                     sort.insertionSort(nums);
                     break;
                 case 4:
                     System.out.println("Unsorted array:");
                     util.printArray(nums);
+                    System.out.println("Sorting....");
                     sort.quickSort(nums, 0, nums.length-1);
                     break;
                 case 5:
                     System.out.println("Unsorted array:");
                     util.printArray(nums);
+                    System.out.println("Sorting....");
                     sort.mergeSort(nums, 0, nums.length-1);
                     break;
                 case 6:
                     System.out.println("Unsorted array:");
                     util.printArray(nums);
+                    System.out.println("Sorting....");
                     sort.heapSort(nums);   
                     break;
                 case 7:
@@ -52,9 +58,11 @@ public class SortingAlgorithms {
                     sort.scrambleArray(nums);
                     System.out.println("Scrambled array");
                     util.printArray(nums);
+                    break;
                 case 8:
                     System.out.println("Goodbye");
                     repeat = false;
+                    break;
                 default:
                     System.out.println("Please enter a valid value");
                     break;
