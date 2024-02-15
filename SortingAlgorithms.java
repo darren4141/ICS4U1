@@ -10,7 +10,7 @@ public class SortingAlgorithms {
 
     public static void main(String[] args)throws IOException{
         int[] nums = arrayFunction.buildArray();
-        String[] menu = {"Selection Sort", "Insertion sort", "Quick Sort", "Merge Sort"};
+        String[] menu = {"Selection Sort", "Insertion sort", "Quick Sort", "Merge Sort", "Heap Sort"};
 
         util.printMenu(menu);
         int choice = Integer.parseInt(br.readLine());
@@ -36,6 +36,11 @@ public class SortingAlgorithms {
                 arrayFunction.printArray(nums);
                 sort.mergeSort(nums, 0, nums.length-1);
                 break;
+            case 5:
+                System.out.println("Unsorted array:");
+                arrayFunction.printArray(nums);
+                sort.heapSort(nums);   
+                break;    
             default:
                 System.out.println("Please enter a valid value");
                 break;
@@ -179,6 +184,40 @@ public class SortingAlgorithms {
             arrayFunction.printArray(arr);
 
         }
+    }
+
+    public void heapSort(int[] arr){
+        for(int i = arr.length / 2 - 1; i >= 0; i--){
+            heapify(arr, arr.length, i);
+        }
+
+        for(int i = arr.length - 1; i > 0; i--){
+            sort.swap(arr, 0, i);
+            heapify(arr, i, 0);
+        }
+
+        arrayFunction.printArray(arr);
+
+    }
+
+    public void heapify(int[] arr, int n, int i){
+        int largest = i;
+        int left = 2 * i + 1;
+        int right = 2 * i + 2;
+
+        if(left < n && arr[left] > arr[largest]){
+            largest = left;
+        }
+
+        if(left < n && arr[right] > arr[largest]){
+            largest = right;
+        }
+
+        if(largest != i){
+            sort.swap(arr, i, largest);
+            heapify(arr, n, largest);
+        }
+
     }
 
 }
