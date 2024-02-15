@@ -124,7 +124,7 @@ public class SortingAlgorithms {
     }
 
     /*
-     * Method that utilizes merge sort algorithm
+     * Method that utilizes merge sort algorithm --> seperate array into subarrays, merge them back together sorted
      * @param:
      * int[] arr --> the array to be sorted
      * int low --> the lowest element in the array
@@ -142,12 +142,10 @@ public class SortingAlgorithms {
             int[] left = new int[sizeLeft];
             int[] right = new int[sizeRight];
 
-            for(int i = 0; i < sizeLeft; i++){
+            for(int i = 0; i < sizeLeft; i++)
                 left[i] = arr[low + i];
-            }
-            for(int i = 0; i < sizeRight; i++){
+            for(int i = 0; i < sizeRight; i++)
                 right[i] = arr[middle + 1 + i];
-            }
 
             int i = 0, j = 0;
 
