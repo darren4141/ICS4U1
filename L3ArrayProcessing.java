@@ -9,9 +9,9 @@ public class L3ArrayProcessing{
     public static void main(String[]args) throws IOException{
         L3ArrayProcessing arrayProcessing = new L3ArrayProcessing();
 
-        final int SIZE = 6;
-        final int RANDOMSIZE = 10;
-        final int RANDOMMAX = 100;
+        // final int SIZE = 6;
+        // final int RANDOMSIZE = 10;
+        // final int RANDOMMAX = 100;
         boolean repeat = true;
 
         while(repeat){        
