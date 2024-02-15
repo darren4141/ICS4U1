@@ -4,46 +4,61 @@ import java.io.*;
 
 public class SortingAlgorithms {
     static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-    static L1ArrayExercise arrayFunction = new L1ArrayExercise();
     static SortingAlgorithms sort = new SortingAlgorithms();
     static DarrenUtils util = new DarrenUtils();
 
     public static void main(String[] args)throws IOException{
-        int[] nums = arrayFunction.buildArray();
-        String[] menu = {"Selection Sort", "Insertion sort", "Quick Sort", "Merge Sort", "Heap Sort"};
+        int[] nums = util.buildArray();
+        String[] menu = {"Bubble Sort", "Selection Sort", "Insertion sort", "Quick Sort", "Merge Sort", "Heap Sort", "Scramble Array"};
+        boolean repeat = true;
 
-        util.printMenu(menu);
-        int choice = Integer.parseInt(br.readLine());
+        while(repeat){
+            util.printMenu(menu);
+            int choice = Integer.parseInt(br.readLine());
 
-        switch(choice){
-            case 1:
-                System.out.println("Unsorted array:");
-                arrayFunction.printArray(nums);
-                sort.selectionSort(nums);
-                break;
-            case 2:
-                System.out.println("Unsorted array:");
-                arrayFunction.printArray(nums);
-                sort.insertionSort(nums);
-                break;
-            case 3:
-                System.out.println("Unsorted array:");
-                arrayFunction.printArray(nums);
-                sort.quickSort(nums, 0, nums.length-1);
-                break;
-            case 4:
-                System.out.println("Unsorted array:");
-                arrayFunction.printArray(nums);
-                sort.mergeSort(nums, 0, nums.length-1);
-                break;
-            case 5:
-                System.out.println("Unsorted array:");
-                arrayFunction.printArray(nums);
-                sort.heapSort(nums);   
-                break;    
-            default:
-                System.out.println("Please enter a valid value");
-                break;
+            switch(choice){
+                case 1:
+                    System.out.println("Unsorted array: ");
+                    util.printArray(nums);
+                    sort.bubbleSort(nums);
+                    break;
+                case 2:
+                    System.out.println("Unsorted array:");
+                    util.printArray(nums);
+                    sort.selectionSort(nums);
+                    break;
+                case 3:
+                    System.out.println("Unsorted array:");
+                    util.printArray(nums);
+                    sort.insertionSort(nums);
+                    break;
+                case 4:
+                    System.out.println("Unsorted array:");
+                    util.printArray(nums);
+                    sort.quickSort(nums, 0, nums.length-1);
+                    break;
+                case 5:
+                    System.out.println("Unsorted array:");
+                    util.printArray(nums);
+                    sort.mergeSort(nums, 0, nums.length-1);
+                    break;
+                case 6:
+                    System.out.println("Unsorted array:");
+                    util.printArray(nums);
+                    sort.heapSort(nums);   
+                    break;
+                case 7:
+                    System.out.println("Scrambling...");
+                    sort.scrambleArray(nums);
+                    System.out.println("Scrambled array");
+                    util.printArray(nums);
+                case 8:
+                    System.out.println("Goodbye");
+                    repeat = false;
+                default:
+                    System.out.println("Please enter a valid value");
+                    break;
+            }
         }
     }
 
@@ -58,6 +73,36 @@ public class SortingAlgorithms {
         int temp = arr[i];
         arr[i] = arr[j];
         arr[j] = temp;
+    }
+
+    public void scrambleArray(int[] arr){
+        for(int i = 0; i < Math.pow(arr.length, 2); i++){
+            int m = (int)(Math.random()*arr.length);
+            int n = (int)(Math.random()*arr.length);
+            sort.swap(arr, m, n);
+        }
+    }
+
+    /*
+     * Method that uses the improved bubble sort algorithm to sort an array
+     * @param: int[] arr --> the array to be sorted
+     */
+    public void bubbleSort(int[] arr) {
+        boolean swapped = true;
+
+        for (int i = arr.length - 1; i > 0; i--) {
+            swapped = false;
+            for (int j = 0; j < i; j++) {
+                if (arr[j] > arr[j + 1]) {
+                    sort.swap(arr, j, j+1);
+                    util.printArray(arr);
+                    swapped = true;
+                }
+            }
+            if (!swapped) {
+                break;
+            }
+        }
     }
 
     /*
@@ -76,11 +121,11 @@ public class SortingAlgorithms {
             }
             if(i != minIndex){
                 sort.swap(arr, i, minIndex);
-                arrayFunction.printArray(arr);
+                util.printArray(arr);
             }
 
         }
-        arrayFunction.printArray(arr);
+        util.printArray(arr);
 
     }
 
@@ -94,7 +139,7 @@ public class SortingAlgorithms {
             while(j != 0 && arr[j] < arr[j-1]){
                 sort.swap(arr, j, j-1);
                 j--;
-                arrayFunction.printArray(arr);
+                util.printArray(arr);
             }
         }
     }
@@ -115,13 +160,13 @@ public class SortingAlgorithms {
                 if(arr[i] < pivot){
                     lowPosition++;
                     sort.swap(arr, i, lowPosition);
-                    arrayFunction.printArray(arr);
+                    util.printArray(arr);
                 }
             }
 
             int pivotIndex = lowPosition + 1;
             sort.swap(arr, high, lowPosition+1);
-            arrayFunction.printArray(arr);
+            util.printArray(arr);
 
             quickSort(arr, low, pivotIndex - 1);
             quickSort(arr, pivotIndex + 1, high);
@@ -179,13 +224,17 @@ public class SortingAlgorithms {
                 j++;
             }
 
-            arrayFunction.printArray(left);
-            arrayFunction.printArray(right);
-            arrayFunction.printArray(arr);
+            util.printArray(left);
+            util.printArray(right);
+            util.printArray(arr);
 
         }
     }
 
+    /*
+     * Method that uses the heap sort algorithm --> build a binary tree, sort the tree, remove the top element and add it to a final array, repeat
+     * @param: int[] arr --> the array to be sorted
+     */
     public void heapSort(int[] arr){
         for(int i = arr.length / 2 - 1; i >= 0; i--){
             heapify(arr, arr.length, i);
@@ -196,10 +245,17 @@ public class SortingAlgorithms {
             heapify(arr, i, 0);
         }
 
-        arrayFunction.printArray(arr);
+        util.printArray(arr);
 
     }
 
+    /*
+     * Method heapify is used to sort a tree
+     * @param:
+     * int[] arr --> the array to be treated as a tree and sorted
+     * int n --> size of heap
+     * int i --> index of the root of the tree
+     */
     public void heapify(int[] arr, int n, int i){
         int largest = i;
         int left = 2 * i + 1;
@@ -209,12 +265,13 @@ public class SortingAlgorithms {
             largest = left;
         }
 
-        if(left < n && arr[right] > arr[largest]){
+        if(right < n && arr[right] > arr[largest]){
             largest = right;
         }
 
         if(largest != i){
             sort.swap(arr, i, largest);
+            util.printArray(arr);
             heapify(arr, n, largest);
         }
 
