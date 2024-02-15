@@ -125,6 +125,10 @@ public class SortingAlgorithms {
 
     /*
      * Method that utilizes merge sort algorithm
+     * @param:
+     * int[] arr --> the array to be sorted
+     * int low --> the lowest element in the array
+     * int high --> the highest element in the array
      */
     public void mergeSort(int[] arr, int low, int high){
         if(high > low){
