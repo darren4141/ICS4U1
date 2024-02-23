@@ -4,7 +4,10 @@ public class L4TwoDArrayExercise2 {
     static Scanner sc = new Scanner(System.in);
 
     public static void main(String[]args){
+
+        System.out.println("How many students are there?");
         int numStudents = sc.nextInt();
+        System.out.println("How many marks are there?");
         int numMarks = sc.nextInt();
 
         String[] names = new String[numStudents];
@@ -45,18 +48,21 @@ public class L4TwoDArrayExercise2 {
             System.out.print((double)avg/numMarks + "\t|");
         }
 
-        System.out.print("\n|\t|");
+        System.out.print("\n|Average|");
 
         for(int i = 0; i < numMarks; i++){
             int testAvg = 0;
             for(int j = 0; j < numStudents; j++){
                 testAvg+=marks[j][i];
             }
-            System.out.print((double)testAvg/numStudents + "\t|");
+
+            double average = (double)(Math.round(testAvg * 100/numStudents))/100;
+            System.out.print(average + "\t|");
 
         }
 
-    }
+        System.out.print("-------|");
 
+    }
 
 }
