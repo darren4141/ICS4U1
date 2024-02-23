@@ -1,15 +1,32 @@
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 public class L4TwoDArrayExercise {
+    static File file = new java.io.File("TwoDArray.txt");
     static Scanner sc = new Scanner(System.in);
-    public static void main(String[] args){
+    public static void main(String[] args) throws FileNotFoundException{
+        Scanner fileScanner = new Scanner(file);
         L4TwoDArrayExercise TwoDArray = new L4TwoDArrayExercise();
-        int[][] nums = TwoDArray.fillTwoDArray(4, 3);
+        int row = fileScanner.nextInt();
+        int col = fileScanner.nextInt();
+        int[][] fileNums = TwoDArray.readTwoDArray(row, col, fileScanner);
 
-        TwoDArray.print2dArray(nums);
-        TwoDArray.transpose2DArray(nums);
+        TwoDArray.showSum(fileNums);
     }
     
+    public int[][] readTwoDArray(int rows, int cols, Scanner fileScanner){
+        int[][] arr = new int[rows][cols];
+
+        for(int i = 0; i < rows; i++){
+            for(int j = 0; j < cols; j++){
+                arr[i][j] = fileScanner.nextInt();
+            }
+            fileScanner.nextLine();
+        }
+        return arr;
+    }
+
     /*
     * Method that prints out a 2D array in a formatted manner
     * @param: int[][] arr --> the array to be printed
@@ -51,7 +68,42 @@ public class L4TwoDArrayExercise {
     }
 
     public void showSum(int[][] arr){
-        
+        int[] rowSum = new int[arr.length];
+        int[] colSum = new int[arr[0].length];
+
+        for(int i = 0; i < arr.length; i++){
+            rowSum[i] = 0;
+            for(int j = 0; j < arr[i].length; j++){
+                rowSum[i]+=arr[i][j];
+            }
+        }
+
+        for(int i = 0; i < arr[0].length; i++){
+            colSum[i] = 0;
+            for(int j = 0; j < arr.length; j++){
+                colSum[i]+=arr[j][i];
+            }
+        }
+
+        for(int i = 0; i < arr.length; i++){
+            System.out.print("|[" + arr[i][0]);
+            for(int j = 1; j < arr[i].length; j++){
+                System.out.print(", " + arr[i][j]);
+            }
+            System.out.println("]| " + rowSum[i]);
+        }
+
+        System.out.print("--");
+        for(int i = 0; i < arr[0].length; i++){
+            System.out.print("---");
+        }
+
+        System.out.println();
+        System.out.print("|[" + colSum[0]);
+        for(int i = 1; i < arr[0].length; i++){
+            System.out.print(", " + colSum[i]);
+        }
+        System.out.println("]|");
     }
     
 }
