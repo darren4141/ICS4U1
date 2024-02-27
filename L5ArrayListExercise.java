@@ -73,6 +73,13 @@ public class L5ArrayListExercise {
 
     }
 
+    /*
+     * Method that fills an ArrayList with user input
+     * 
+     * @param:
+     * ArrayList<Integer> list --> the arraylist to be filled
+     * int max --> the number of elements to be added into the arraylist
+     */
     public void enterFromKeyboard(ArrayList<Integer> list, int max) throws IOException{
         for(int i = 0; i < max; i++){
             System.out.println("Enter integer " + i + ": ");
@@ -80,6 +87,10 @@ public class L5ArrayListExercise {
         }
     }
 
+    /*
+     * Method that counts the number of whole positive integers in an arrayList
+     * @param: ArrayList<Integer> list --> the given arraylist
+     */
     public int countWhole(ArrayList<Integer> list){
         int count = 0;
         for(int i : list){
@@ -90,10 +101,18 @@ public class L5ArrayListExercise {
         return count;
     }
 
+    /*
+     * Method displays the elements of an arraylist
+     * @param: ArrayList<Integer> list --> the given arraylist
+     */
     public void display(ArrayList<Integer> list){
         System.out.println(list);
     }
 
+    /*
+     * Method displays the elements of an arraylist in reverse
+     * @param: ArrayList<Integer> list --> the given arraylist
+     */
     public void displayReverse(ArrayList<Integer> list){
         System.out.print("[" + list.get(list.size() - 1));
 
@@ -104,6 +123,11 @@ public class L5ArrayListExercise {
         System.out.println("]");
     }
 
+    /*
+     * Method returns the sum of all of the elements in an arraylist
+     * @param: ArrayList<Integer> list --> the given arraylist
+     * @return: int --> the sum of all of the elements
+     */
     public int sum(ArrayList<Integer> list){
         int sum = 0;
         for(int i : list){
@@ -112,6 +136,11 @@ public class L5ArrayListExercise {
         return sum;
     }
 
+    /*
+     * Method returns the average of all of the elements in an arraylist
+     * @param: ArrayList<Integer> list --> the given arraylist
+     * @return: double --> the average of all of the elements
+     */
     public double average(ArrayList<Integer> list){
         double avg = 0;
         for(int i : list){
@@ -122,6 +151,11 @@ public class L5ArrayListExercise {
         return avg;
     }
 
+    /*
+     * Method returns the maximum value of all of the elements in an arraylist
+     * @param: ArrayList<Integer> list --> the given arraylist
+     * @return: int --> the maximum value of all of the elements
+     */
     public int findMax(ArrayList<Integer> list){
         int maxIndex = 0;
         for(int i = 1; i < list.size(); i++){
@@ -132,6 +166,11 @@ public class L5ArrayListExercise {
         return list.get(maxIndex);
     }
 
+    /*
+     * Method returns the minimum value of all of the elements in an arraylist
+     * @param: ArrayList<Integer> list --> the given arraylist
+     * @return: int --> the minimum value of all of the elements
+     */
     public int findMin(ArrayList<Integer> list){
         int minIndex = 0;
         for(int i = 1; i < list.size(); i++){
@@ -142,6 +181,13 @@ public class L5ArrayListExercise {
         return list.get(minIndex);
     }
 
+    /*
+     * Method searches for the indicies of a certain element in an arraylist
+     * @param: 
+     * ArrayList<Integer> list --> the given arraylist
+     * int num --> the element to search for
+     * @return: ArrayList<Integer> --> the positions of the element in the given arraylist
+     */
     public ArrayList<Integer> search(ArrayList<Integer> list, int num){
         ArrayList<Integer> positions = new ArrayList<Integer>();
         for(int i = 0; i < list.size(); i++){
@@ -152,6 +198,13 @@ public class L5ArrayListExercise {
         return positions;
     }
 
+    /*
+     * the method improvedBubbleSort is used to sort an arraylist using the improved
+     * bubble sort method (ends the bubble sort if there are no more swaps to be
+     * done)
+     * 
+     * @param: ArrayList<Integer> list --> the given arraylist
+     */
     public void improvedBubbleSort(ArrayList<Integer> list){
         boolean swapped = true;
         int i = 0;
