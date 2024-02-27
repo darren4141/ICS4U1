@@ -275,4 +275,20 @@ public class L1ArrayExercise {
         return count;
     }
 
+        /*
+     * Method that utilizes insertion sort --> a number is compared with its predecessors and "inserted into the correct location"
+     * @param: int[] arr --> the array to be sorted
+     */
+    public void insertionSort(int[] arr){
+        for(int i = 1; i < arr.length; i++){
+            int j = i;
+            while(j != 0 && arr[j] < arr[j-1]){
+                int temp = arr[j];
+                arr[j] = arr[j-1];
+                arr[j-1] = temp;
+                j--;
+            }
+        }
+    }
+
 }
