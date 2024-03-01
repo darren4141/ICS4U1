@@ -38,14 +38,14 @@ public class L5ArrayListQuiz {
 
         System.out.println("The size of a1 after entering 7 items is: " + a1.size()); //output would be 7
 
-        System.out.println("The contents of a1 is: " + a1);
+        System.out.println("The contents of a1 is: " + a1); // [C, A2, A, E, B, D, F]
 
         a1.remove("F");
         a1.remove(2);
 
         System.out.println("The size of a1 after removing 2 items is: " + a1.size()); //output would be 5
 
-        System.out.println("The contents of a1 after these removals is: " + a1);
+        System.out.println("The contents of a1 after these removals is: " + a1); //[C, A2, E, B, D, F]
     }
 
 }
