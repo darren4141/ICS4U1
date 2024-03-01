@@ -291,4 +291,29 @@ public class L1ArrayExercise {
         }
     }
 
+    /*
+     * Method that utilizes selection sort --> searches for the min value, puts it at the start, repeat
+     * @param: int [] arr --> the array to be sorted
+     */
+    public void selectionSort(int[] arr){
+        for(int i = 0; i < arr.length-1; i++){
+            int min = arr[i];
+            int minIndex = i;
+            for(int j = i+1; j < arr.length; j++){
+                if(arr[j] < min){
+                    min = arr[j];
+                    minIndex = j;
+                }
+            }
+            if(i != minIndex){
+                int temp = arr[i];
+                arr[i] = arr[minIndex];
+                arr[minIndex] = temp;
+            }
+
+        }
+
+    }
+
+
 }
