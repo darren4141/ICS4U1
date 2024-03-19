@@ -77,6 +77,12 @@ public class L8RecursionExercise {
         }
     }
 
+    /*
+     * Extra problems:
+     * - fibbonaci sequence
+     * - sum of digits of a number
+     */
+
     public static int fibbonaci(int n){
         if(n == 1 || n == 2){
             return 1;
