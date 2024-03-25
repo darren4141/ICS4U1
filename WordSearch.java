@@ -19,6 +19,7 @@ public class WordSearch extends JFrame implements ActionListener{
     static JLabel guessPrompt = new JLabel();
     static TextField guessTextField = new TextField();
 
+
     public WordSearch(){
         setTitle("Word Search");
         setSize(SCREENWIDTH, SCREENHEIGHT);
@@ -101,7 +102,12 @@ public class WordSearch extends JFrame implements ActionListener{
         String command = event.getActionCommand();
 
         if(command.equals("Guess!")){
-
+            String guess = guessTextField.getText();
+            if(guess.length() < Math.max(ROWS, COLS)){
+                
+            }else{
+                guessPrompt.setText("This word cannot fit in the grid!");
+            }
         }
 
     }
