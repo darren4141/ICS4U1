@@ -18,6 +18,8 @@ public class WordSearch extends JFrame implements ActionListener{
     static JLabel mainMessage = new JLabel("");
     static JLabel guessPrompt = new JLabel();
     static TextField guessTextField = new TextField();
+    static char[][] wordGrid;
+
 
 
     public WordSearch(){
@@ -59,7 +61,7 @@ public class WordSearch extends JFrame implements ActionListener{
         wordGridPanel.setBorder(BorderFactory.createLineBorder(Color.black));
         wordGridPanel.setLayout(wordGridLayout);
 
-        char[][] wordGrid = fillTwoDArray(ROWS, COLS);
+        wordGrid = fillTwoDArray(ROWS, COLS);
 
         for(int i = 0; i < ROWS; i++){
             for(int j = 0; j < COLS; j++){
@@ -117,10 +119,10 @@ public class WordSearch extends JFrame implements ActionListener{
 
         if(command.equals("Guess!")){
             String guess = guessTextField.getText();
-            if(guess.length() < Math.max(ROWS, COLS)){
-                
+            if(searchForWord(wordGrid, guess, ROWS, COLS)){
+                guessPrompt.setText("YES");
             }else{
-                guessPrompt.setText("This word cannot fit in the grid!");
+                guessPrompt.setText("NO");
             }
         }
 
@@ -150,5 +152,67 @@ public class WordSearch extends JFrame implements ActionListener{
             }
         }
         return grid;
+    }
+
+    public static boolean searchForWord (char[][] grid, String word, int rows, int cols){
+        int [][] possibleDirections = {
+            {-1, -1},
+            {-1, 0},
+            {-1, 1},
+            {0, -1},
+            {0, 1},
+            {1, -1},
+            {1, 0},
+            {1, 1}
+        };
+
+        if(word.length() > Math.max(rows, cols)){
+            return false;
+        }
+
+        for(int i = 0; i < rows; i++){
+            for(int j = 0; j < cols; j++){
+                System.out.print("\n"+grid[i][j]);
+                if(grid[i][j] == word.charAt(0)){
+                    for(int[]direction : possibleDirections){
+                        if(
+                            i + direction[0] >= 0 
+                            && i + direction[0] < rows 
+                            && j + direction[1] >= 0
+                            && j + direction[1] < cols
+                            && grid[i+direction[0]][j+direction[1]] == word.charAt(1)
+                        ){
+                            System.out.print(grid[i+direction[0]][j + direction[1]]);
+                            if(sequence(grid, word, rows, cols, direction[0], direction[1], i, j)){
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    public static boolean sequence(char[][] grid, String word, int rows, int cols, int xDirection, int yDirection, int x, int y){
+        boolean wordIsEqual = true;
+        int charactersScanned = 2;
+        while (wordIsEqual) {
+            if(charactersScanned == word.length()){
+                return true;
+            }else if(
+                x + xDirection * charactersScanned >= 0
+                && x + xDirection * charactersScanned < rows
+                && y + yDirection * charactersScanned >= 0
+                && y + yDirection * charactersScanned < cols
+                && grid[x + xDirection * charactersScanned][y + yDirection * charactersScanned] == word.charAt(charactersScanned)
+                ){
+                System.out.print(grid[x + xDirection * charactersScanned][y + yDirection * charactersScanned]);
+                charactersScanned++;
+            }else{
+                wordIsEqual = false;
+            }
+        }
+        return wordIsEqual;
     }
 }
