@@ -11,7 +11,6 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Scanner;
 
@@ -153,8 +152,8 @@ public class WordSearch extends JFrame implements ActionListener{
                     }
                     sortArrayList(foundWords);
                     verticalFrame2.removeAll();
-                    for(String s : foundWords){
-                        JLabel word = new JLabel(s);
+                    for(int i = 0; i < foundWords.size(); i++){
+                        JLabel word = new JLabel(foundWords.get(i));
                         verticalFrame2.add(word);
                     }   
                 }else{
