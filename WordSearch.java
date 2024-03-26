@@ -25,18 +25,30 @@ public class WordSearch extends JFrame implements ActionListener{
         setSize(SCREENWIDTH, SCREENHEIGHT);
 
         JPanel container = new JPanel();
-        BoxLayout containerLayout = new BoxLayout(container, BoxLayout.Y_AXIS);
-        container.setLayout(containerLayout);
+        BoxLayout containerFrame = new BoxLayout(container, BoxLayout.X_AXIS);
+        container.setLayout(containerFrame);
         container.setBorder(BorderFactory.createLineBorder(Color.black));
-        
+
         JPanel verticalFrame1 = new JPanel();
+        BoxLayout verticalFrame1Layout = new BoxLayout(verticalFrame1, BoxLayout.Y_AXIS);
+        verticalFrame1.setMaximumSize(new Dimension(SCREENWIDTH/2, SCREENHEIGHT));
+        verticalFrame1.setLayout(verticalFrame1Layout);
+        verticalFrame1.setBorder(BorderFactory.createLineBorder(Color.orange));
+
+        JPanel verticalFrame2 = new JPanel();
+        BoxLayout verticalFrame2Layout = new BoxLayout(verticalFrame2, BoxLayout.Y_AXIS);
+        verticalFrame2.setMaximumSize(new Dimension(SCREENWIDTH/2, SCREENHEIGHT));
+        verticalFrame2.setLayout(verticalFrame2Layout);
+        verticalFrame2.setBorder(BorderFactory.createLineBorder(Color.red));
+        
+        JPanel horizontalFrame1 = new JPanel();
         FlowLayout frame1Layout = new FlowLayout();
         
         frame1Layout.setAlignment(FlowLayout.LEFT);
         
-        verticalFrame1.setLayout(frame1Layout);
-        verticalFrame1.setMaximumSize(new Dimension(SCREENWIDTH, 210));
-        verticalFrame1.setBorder(BorderFactory.createLineBorder(Color.red));
+        horizontalFrame1.setLayout(frame1Layout);
+        horizontalFrame1.setMaximumSize(new Dimension(SCREENWIDTH, 210));
+        horizontalFrame1.setBorder(BorderFactory.createLineBorder(Color.red));
         
         GridLayout wordGridLayout = new GridLayout();
         wordGridLayout.setColumns(COLS);
@@ -57,35 +69,37 @@ public class WordSearch extends JFrame implements ActionListener{
             }
         }
 
-        verticalFrame1.add(wordGridPanel);
+        horizontalFrame1.add(wordGridPanel);
 
-        JPanel verticalFrame2 = new JPanel();
+        JPanel horizontalFrame2 = new JPanel();
         FlowLayout frame2Layout = new FlowLayout();
         frame2Layout.setAlignment(FlowLayout.LEFT);
-        verticalFrame2.setLayout(frame2Layout);
-        verticalFrame2.setBorder(BorderFactory.createLineBorder(Color.blue));
-        verticalFrame2.setMaximumSize(new Dimension(SCREENWIDTH, 40));
+        horizontalFrame2.setLayout(frame2Layout);
+        horizontalFrame2.setBorder(BorderFactory.createLineBorder(Color.blue));
+        horizontalFrame2.setMaximumSize(new Dimension(SCREENWIDTH, 40));
         guessTextField.setColumns(9);
         JButton guessButton = new JButton("Guess!");
         guessButton.addActionListener(this);
 
-        verticalFrame2.add(guessTextField);
-        verticalFrame2.add(guessButton);
+        horizontalFrame2.add(guessTextField);
+        horizontalFrame2.add(guessButton);
 
-        JPanel verticalFrame3 = new JPanel();
+        JPanel horizontalFrame3 = new JPanel();
         FlowLayout frame3Layout = new FlowLayout();
         frame3Layout.setAlignment(FlowLayout.LEFT);
-        verticalFrame3.setLayout(frame3Layout);
-        verticalFrame3.setBorder(BorderFactory.createLineBorder(Color.green));
-        verticalFrame3.setMaximumSize(new Dimension(SCREENWIDTH, 30));
+        horizontalFrame3.setLayout(frame3Layout);
+        horizontalFrame3.setBorder(BorderFactory.createLineBorder(Color.green));
+        horizontalFrame3.setMaximumSize(new Dimension(SCREENWIDTH, 30));
         guessPrompt.setText("Make a guess!");
-        verticalFrame3.add(guessPrompt);
+        horizontalFrame3.add(guessPrompt);
 
 
         Container contentPane = getContentPane();
+        verticalFrame1.add(horizontalFrame1);
+        verticalFrame1.add(horizontalFrame2);
+        verticalFrame1.add(horizontalFrame3);
         container.add(verticalFrame1);
         container.add(verticalFrame2);
-        container.add(verticalFrame3);
         contentPane.add(container);
 
         //configure settings
