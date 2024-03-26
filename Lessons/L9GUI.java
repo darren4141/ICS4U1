@@ -1,3 +1,4 @@
+package Lessons;
 import javax.swing.*;
 import java.awt.*;
 

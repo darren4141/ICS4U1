@@ -1,3 +1,4 @@
+package Lessons;
 import java.util.HashMap;
 public class L6HashMapsDemo {
 

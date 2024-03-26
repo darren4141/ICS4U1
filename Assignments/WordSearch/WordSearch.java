@@ -1,3 +1,4 @@
+package Assignments.WordSearch;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
@@ -95,7 +96,7 @@ public class WordSearch extends JFrame implements ActionListener{
         guessPrompt.setText("Make a guess!");
         horizontalFrame3.add(guessPrompt);
 
-
+        
         Container contentPane = getContentPane();
         verticalFrame1.add(horizontalFrame1);
         verticalFrame1.add(horizontalFrame2);
@@ -103,7 +104,8 @@ public class WordSearch extends JFrame implements ActionListener{
         container.add(verticalFrame1);
         container.add(verticalFrame2);
         contentPane.add(container);
-
+        container.getRootPane().setDefaultButton(guessButton);
+        
         //configure settings
         setVisible(true);
         setResizable(true);
@@ -118,9 +120,14 @@ public class WordSearch extends JFrame implements ActionListener{
         String command = event.getActionCommand();
 
         if(command.equals("Guess!")){
-            String guess = guessTextField.getText();
-            if(searchForWord(wordGrid, guess, ROWS, COLS)){
+            String guess = guessTextField.getText().toUpperCase();
+            if(guess.length() == 0){
+                guessPrompt.setText("Enter a word!");
+            }else if(guess.length() > Math.max(ROWS, COLS)){
+                guessPrompt.setText("Too long!");
+            }else if(searchForWord(wordGrid, guess, ROWS, COLS)){
                 guessPrompt.setText("YES");
+                
             }else{
                 guessPrompt.setText("NO");
             }
@@ -215,4 +222,5 @@ public class WordSearch extends JFrame implements ActionListener{
         }
         return wordIsEqual;
     }
+
 }

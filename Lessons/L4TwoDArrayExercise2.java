@@ -1,3 +1,4 @@
+package Lessons;
 import java.util.Scanner;
 
 public class L4TwoDArrayExercise2 {
