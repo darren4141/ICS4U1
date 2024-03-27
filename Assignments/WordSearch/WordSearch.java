@@ -15,6 +15,7 @@ import java.util.Comparator;
 import java.util.Scanner;
 
 import javax.swing.*;
+import javax.swing.border.LineBorder;
 
 public class WordSearch extends JFrame implements ActionListener{
     static final int ROWS = 6;
@@ -44,7 +45,7 @@ public class WordSearch extends JFrame implements ActionListener{
 
         JPanel verticalFrame1 = new JPanel();
         BoxLayout verticalFrame1Layout = new BoxLayout(verticalFrame1, BoxLayout.Y_AXIS);
-        verticalFrame1.setMaximumSize(new Dimension(SCREENWIDTH/2, SCREENHEIGHT));
+        verticalFrame1.setMaximumSize(new Dimension(260, SCREENHEIGHT));
         verticalFrame1.setLayout(verticalFrame1Layout);
         verticalFrame1.setBorder(BorderFactory.createLineBorder(Color.orange));
 
@@ -60,7 +61,7 @@ public class WordSearch extends JFrame implements ActionListener{
         frame1Layout.setAlignment(FlowLayout.LEFT);
         
         horizontalFrame1.setLayout(frame1Layout);
-        horizontalFrame1.setMaximumSize(new Dimension(SCREENWIDTH, 210));
+        horizontalFrame1.setMaximumSize(new Dimension(SCREENWIDTH, 260));
         horizontalFrame1.setBorder(BorderFactory.createLineBorder(Color.red));
         
         GridLayout wordGridLayout = new GridLayout();
@@ -68,13 +69,15 @@ public class WordSearch extends JFrame implements ActionListener{
         wordGridLayout.setRows(ROWS);
 
         wordGridPanel = new JPanel();
-        wordGridPanel.setPreferredSize(new Dimension(200, 200));
+        wordGridPanel.setPreferredSize(new Dimension(250, 250));
         wordGridPanel.setBorder(BorderFactory.createLineBorder(Color.black));
+        wordGridPanel.setBackground(new Color(200, 200, 200));
+        
         wordGridPanel.setLayout(wordGridLayout);
 
         wordGrid = fillTwoDArray(ROWS, COLS);
 
-        printWordGrid();
+        printWordGrid(false);
 
         horizontalFrame1.add(wordGridPanel);
 
@@ -116,7 +119,7 @@ public class WordSearch extends JFrame implements ActionListener{
         
     }
 
-    public static void main(String[] args) throws FileNotFoundException{
+    public static void main(String[] args) throws FileNotFoundException, InterruptedException{
         File wordList = new File("Assignments/WordSearch/wordlist.txt");
         Scanner fileReader = new Scanner(wordList);
         words = new String[FILELINES];
@@ -132,42 +135,67 @@ public class WordSearch extends JFrame implements ActionListener{
     
     public void actionPerformed(ActionEvent event){
         String command = event.getActionCommand();
+        Boolean fileContainsWord = false;
 
         if(command.equals("Guess!")){
             String guess = guessTextField.getText().toUpperCase();
+            guessTextField.setText("");
+            fileContainsWord = searchFile(guess, words, 0, FILELINES-1);
             if(guess.length() == 0){
                 guessPrompt.setText("Enter a word!");
+                guessPrompt.setForeground(Color.black);
+                trackedWordStart[0] = 0;
+                trackedWordStart[1] = 0;
+                trackedWordEnd[0] = 0;
+                trackedWordEnd[1] = 0;
             }else if(guess.length() == 1){
                 guessPrompt.setText("Too short!");
+                guessPrompt.setForeground(Color.red);
+                trackedWordStart[0] = 0;
+                trackedWordStart[1] = 0;
+                trackedWordEnd[0] = 0;
+                trackedWordEnd[1] = 0;
             }else if(guess.length() > Math.max(ROWS, COLS)){
                 guessPrompt.setText("Too long!");
+                guessPrompt.setForeground(Color.red);
+                trackedWordStart[0] = 0;
+                trackedWordStart[1] = 0;
+                trackedWordEnd[0] = 0;
+                trackedWordEnd[1] = 0;
             }else if(searchForWord(wordGrid, guess, ROWS, COLS)){
-                printWordGrid();
-                guessPrompt.setText("YES");
                 System.out.println(guess.toLowerCase());
-                if(searchFile(guess, words, 0, FILELINES-1)){
-                    guessPrompt.setText("YES, AND IN DICTIONARY");
+                if(fileContainsWord){
+                    guessPrompt.setText("You already entered this!");
+                    guessPrompt.setForeground(Color.red);
+                    verticalFrame2.removeAll();
                     if(!foundWords.contains(guess)){
                         foundWords.add(guess);
+                        guessPrompt.setText("YES, AND IN DICTIONARY");
+                        guessPrompt.setForeground(new Color(33, 168, 7));
                     }
                     sortArrayList(foundWords);
-                    verticalFrame2.removeAll();
                     for(int i = 0; i < foundWords.size(); i++){
                         JLabel word = new JLabel(foundWords.get(i));
                         verticalFrame2.add(word);
-                    }   
+                    }
                 }else{
                     guessPrompt.setText("YES, NOT IN DICTIONARY");
+                    guessPrompt.setForeground(Color.red);
                 }
             }else{
                 trackedWordStart[0] = 0;
                 trackedWordStart[1] = 0;
                 trackedWordEnd[0] = 0;
                 trackedWordEnd[1] = 0;
-                guessPrompt.setText("NO");
+                guessPrompt.setText("NOT ON THE GRID");
+                guessPrompt.setForeground(Color.red);
             }
         }
-
+        printWordGrid(fileContainsWord);
+        wordGridPanel.revalidate();
+        wordGridPanel.repaint(); 
+        verticalFrame2.revalidate();
+        verticalFrame2.repaint();
     }
 
     public static char[][] fillTwoDArray(int rows, int cols){
@@ -281,7 +309,7 @@ public class WordSearch extends JFrame implements ActionListener{
         return false;
     }
 
-    public void printWordGrid(){
+    public void printWordGrid(boolean wordIsGood){
         wordGridPanel.removeAll();
         int dy = trackedWordEnd[1] - trackedWordStart[1];
         int dx = trackedWordEnd[0] - trackedWordStart[0];
@@ -311,9 +339,15 @@ public class WordSearch extends JFrame implements ActionListener{
             for(int j = 0; j < COLS; j++){
                 JLabel character = new JLabel(Character.toString(wordGrid[i][j]), SwingConstants.CENTER);
                 character.setFont(new Font("Sans Serif", Font.BOLD, 34));
+                character.setBorder(new LineBorder(Color.black, 1));
                 for(int c = 0; c < Math.max(Math.abs(dy), Math.abs(dx)); c++){
                     if(i == trackedWordStart[0] + c * xDirection && j == trackedWordStart[1] + c * yDirection){
-                        character.setForeground(Color.red);
+                        if(wordIsGood){
+                            character.setBackground(Color.green);
+                        }else{
+                            character.setBackground(Color.red);
+                        }
+                        character.setOpaque(true);
                     }
                 }
                 wordGridPanel.add(character);
@@ -340,5 +374,4 @@ public class WordSearch extends JFrame implements ActionListener{
             }
         }
     }
-
 }
