@@ -21,7 +21,7 @@ public class WordSearch extends JFrame implements ActionListener{
     static final int ROWS = 6;
     static final int COLS = 6;
     static final int SCREENWIDTH = 500;
-    static final int SCREENHEIGHT = 500;
+    static final int SCREENHEIGHT = 750;
     static JLabel mainMessage = new JLabel("");
     static JLabel guessPrompt = new JLabel();
     static TextField guessTextField = new TextField();
@@ -128,6 +128,8 @@ public class WordSearch extends JFrame implements ActionListener{
         BoxLayout horizontalFrame12Layout = new BoxLayout(horizontalFrame12, BoxLayout.Y_AXIS);
         horizontalFrame12.setLayout(horizontalFrame12Layout);
 
+        JOptionPane.showMessageDialog(this, "a");
+
         Container contentPane = getContentPane();
         verticalFrame1.add(horizontalFrame0);
         verticalFrame1.add(horizontalFrame1);
@@ -232,6 +234,12 @@ public class WordSearch extends JFrame implements ActionListener{
             wordGrid = fillTwoDArray(ROWS, COLS);
             foundWords.clear();
             horizontalFrame12.removeAll();
+            trackedWordStart[0] = 0;
+            trackedWordStart[1] = 0;
+            trackedWordEnd[0] = 0;
+            trackedWordEnd[1] = 0;
+            wordGridPanel.revalidate();
+            wordGridPanel.repaint(); 
         }
 
         printWordGrid(fileContainsWord);
@@ -244,9 +252,15 @@ public class WordSearch extends JFrame implements ActionListener{
     public static char[][] fillTwoDArray(int rows, int cols){
         char[][] grid = new char[rows][cols];
         int[] letterFrequencies = {43, 11, 23, 17, 57, 9, 13, 15, 38, 1, 6, 28, 15, 34, 37, 16, 1, 39, 29, 35, 19, 5, 7, 1, 9, 1};
+        for(int i = 0; i < letterFrequencies.length; i++){
+            letterFrequencies[i] -= ((letterFrequencies[i]-1) * (letterFrequencies[i]-1)) * 0.005;
+            letterFrequencies[i] *= 0.5;
+            letterFrequencies[i]++;
+        }
         int sumFrequencies = 0;
         for(int f : letterFrequencies){
             sumFrequencies += f;
+            System.out.print(f + " ");
         }
         char[] letters = new char[sumFrequencies];
         
