@@ -29,7 +29,7 @@ public class WordSearch extends JFrame implements ActionListener{
     static String[] words;
     static final int FILELINES = 109582;
     static JPanel wordGridPanel;
-    static JPanel verticalFrame2;
+    static JPanel horizontalFrame12;
     static int[] trackedWordStart = new int[2];
     static int[] trackedWordEnd = new int[2];
     static ArrayList<String> foundWords = new ArrayList<String>();
@@ -49,11 +49,23 @@ public class WordSearch extends JFrame implements ActionListener{
         verticalFrame1.setLayout(verticalFrame1Layout);
         verticalFrame1.setBorder(BorderFactory.createLineBorder(Color.orange));
 
-        verticalFrame2 = new JPanel();
+        JPanel verticalFrame2 = new JPanel();
         BoxLayout verticalFrame2Layout = new BoxLayout(verticalFrame2, BoxLayout.Y_AXIS);
         verticalFrame2.setMaximumSize(new Dimension(SCREENWIDTH/2, SCREENHEIGHT));
         verticalFrame2.setLayout(verticalFrame2Layout);
         verticalFrame2.setBorder(BorderFactory.createLineBorder(Color.red));
+
+        JPanel horizontalFrame0 = new JPanel();
+        FlowLayout frame0Layout = new FlowLayout();
+        frame0Layout.setAlignment(FlowLayout.LEFT);
+        horizontalFrame0.setLayout(frame0Layout);
+        horizontalFrame0.setMaximumSize(new Dimension(SCREENWIDTH, 30));
+        JLabel mainMessage = new JLabel("Search for Words! ");
+        mainMessage.setFont(new Font("Sans Serif", Font.BOLD, 18));
+        JButton refreshButton = new JButton("Refresh");
+        refreshButton.addActionListener(this);
+        horizontalFrame0.add(mainMessage);
+        horizontalFrame0.add(refreshButton);
         
         JPanel horizontalFrame1 = new JPanel();
         FlowLayout frame1Layout = new FlowLayout();
@@ -103,11 +115,26 @@ public class WordSearch extends JFrame implements ActionListener{
         guessPrompt.setText("Make a guess!");
         horizontalFrame3.add(guessPrompt);
 
-        
+        JPanel horizontalFrame11 = new JPanel();
+        FlowLayout frame11Layout = new FlowLayout();
+        frame11Layout.setAlignment(FlowLayout.LEFT);
+        horizontalFrame11.setLayout(frame11Layout);
+        horizontalFrame11.setMaximumSize(new Dimension(SCREENWIDTH, 30));
+        JLabel answersPrompt = new JLabel("Your Guesses:");
+        answersPrompt.setFont(new Font("Sans Serif", Font.BOLD, 18));
+        horizontalFrame11.add(answersPrompt);
+
+        horizontalFrame12 = new JPanel();
+        BoxLayout horizontalFrame12Layout = new BoxLayout(horizontalFrame12, BoxLayout.Y_AXIS);
+        horizontalFrame12.setLayout(horizontalFrame12Layout);
+
         Container contentPane = getContentPane();
+        verticalFrame1.add(horizontalFrame0);
         verticalFrame1.add(horizontalFrame1);
         verticalFrame1.add(horizontalFrame2);
         verticalFrame1.add(horizontalFrame3);
+        verticalFrame2.add(horizontalFrame11);
+        verticalFrame2.add(horizontalFrame12);
         container.add(verticalFrame1);
         container.add(verticalFrame2);
         contentPane.add(container);
@@ -167,7 +194,7 @@ public class WordSearch extends JFrame implements ActionListener{
                 if(fileContainsWord){
                     guessPrompt.setText("You already entered this!");
                     guessPrompt.setForeground(Color.red);
-                    verticalFrame2.removeAll();
+                    horizontalFrame12.removeAll();
                     if(!foundWords.contains(guess)){
                         foundWords.add(guess);
                         guessPrompt.setText("YES, AND IN DICTIONARY");
@@ -176,8 +203,17 @@ public class WordSearch extends JFrame implements ActionListener{
                     sortArrayList(foundWords);
                     for(int i = 0; i < foundWords.size(); i++){
                         JLabel word = new JLabel(foundWords.get(i));
-                        verticalFrame2.add(word);
+                        word.setFont(new Font("Sans-Serif", Font.BOLD ,15));
+                        JPanel wordPanel= new JPanel();
+                        wordPanel.setMaximumSize(new Dimension(SCREENWIDTH/2, 30));
+                        FlowLayout layout = new FlowLayout();
+                        layout.setAlignment(FlowLayout.LEFT);
+                        wordPanel.setLayout(layout);
+                        wordPanel.add(word);
+                        wordPanel.setBorder(BorderFactory.createLineBorder(Color.pink));
+                        horizontalFrame12.add(wordPanel);
                     }
+                    horizontalFrame12.add(new JLabel(" "));
                 }else{
                     guessPrompt.setText("YES, NOT IN DICTIONARY");
                     guessPrompt.setForeground(Color.red);
@@ -191,11 +227,18 @@ public class WordSearch extends JFrame implements ActionListener{
                 guessPrompt.setForeground(Color.red);
             }
         }
+
+        if(command.equals("Refresh")){
+            wordGrid = fillTwoDArray(ROWS, COLS);
+            foundWords.clear();
+            horizontalFrame12.removeAll();
+        }
+
         printWordGrid(fileContainsWord);
         wordGridPanel.revalidate();
         wordGridPanel.repaint(); 
-        verticalFrame2.revalidate();
-        verticalFrame2.repaint();
+        horizontalFrame12.revalidate();
+        horizontalFrame12.repaint();
     }
 
     public static char[][] fillTwoDArray(int rows, int cols){
@@ -313,8 +356,6 @@ public class WordSearch extends JFrame implements ActionListener{
         wordGridPanel.removeAll();
         int dy = trackedWordEnd[1] - trackedWordStart[1];
         int dx = trackedWordEnd[0] - trackedWordStart[0];
-
-        System.out.println(dy + " " + dx);
 
         int yDirection;
         int xDirection;
