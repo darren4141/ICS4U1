@@ -250,11 +250,14 @@ public class WordSearch extends JFrame implements ActionListener{
     }
 
     public static char[][] fillTwoDArray(int rows, int cols){
+        int vowelCount = 0;
+        int consonantCount = 0;
+
         char[][] grid = new char[rows][cols];
         int[] letterFrequencies = {43, 11, 23, 17, 57, 9, 13, 15, 38, 1, 6, 28, 15, 34, 37, 16, 1, 39, 29, 35, 19, 5, 7, 1, 9, 1};
         for(int i = 0; i < letterFrequencies.length; i++){
             letterFrequencies[i] -= ((letterFrequencies[i]-1) * (letterFrequencies[i]-1)) * 0.005;
-            letterFrequencies[i] *= 0.5;
+            letterFrequencies[i] *= 0.3;
             letterFrequencies[i]++;
         }
         int sumFrequencies = 0;
@@ -275,7 +278,40 @@ public class WordSearch extends JFrame implements ActionListener{
 
         for(int i = 0; i < rows; i++){
             for(int j = 0; j < cols; j++){
-                grid[i][j] = letters[(int)(Math.random() * sumFrequencies)];
+                boolean isVowel = false;
+                boolean inBounds = false;
+                int randCharIndex = (int)(Math.random() * sumFrequencies);
+
+                if(letters[randCharIndex] == 'A' || letters[randCharIndex] == 'E' || letters[randCharIndex] == 'I' || letters[randCharIndex] == 'O' || letters[randCharIndex] == 'U'){
+                    vowelCount++;
+                    isVowel = true;
+                }else{
+                    consonantCount++;
+                }
+
+                while(!inBounds){
+                    if(isVowel){       
+                        if(vowelCount < 12){
+                            grid[i][j] = letters[randCharIndex];
+                            System.out.println(i + " " + j + " " + "adding " + grid[i][j]);
+                            inBounds = true;
+                        }else{
+                            vowelCount--;
+                            System.out.println(i + " " + j + " " + letters[randCharIndex] + " not accepted " + vowelCount);
+                            randCharIndex = (int)(Math.random() * sumFrequencies);
+                        }      
+                    }else if(!isVowel){
+                        if(consonantCount < 27){
+                            grid[i][j] = letters[randCharIndex];
+                            System.out.println(i + " " + j + " " + "adding " + grid[i][j]);
+                            inBounds = true;
+                        }else{
+                            consonantCount--;
+                            System.out.println(i + " " + j + " " + letters[randCharIndex] + " not accepted " + consonantCount);
+                            randCharIndex = (int)(Math.random() * sumFrequencies);
+                        }
+                    }
+                }
             }
         }
         return grid;
