@@ -33,6 +33,16 @@ public class WordSearch extends JFrame implements ActionListener{
     static int[] trackedWordStart = new int[2];
     static int[] trackedWordEnd = new int[2];
     static ArrayList<String> foundWords = new ArrayList<String>();
+    static int [][] possibleDirections = {
+        {-1, -1},
+        {-1, 0},
+        {-1, 1},
+        {0, -1},
+        {0, 1},
+        {1, -1},
+        {1, 0},
+        {1, 1}
+    };
 
     public WordSearch(){
         setTitle("Word Search");
@@ -125,14 +135,29 @@ public class WordSearch extends JFrame implements ActionListener{
         horizontalFrame11.add(answersPrompt);
 
         horizontalFrame12 = new JPanel();
-        BoxLayout horizontalFrame12Layout = new BoxLayout(horizontalFrame12, BoxLayout.Y_AXIS);
+        GridLayout horizontalFrame12Layout = new GridLayout(1000, 1);
         horizontalFrame12.setLayout(horizontalFrame12Layout);
 
         JPanel verticalFrame3 = new JPanel();
-        BoxLayout verticalFrame3Layout = new BoxLayout(verticalFrame3, BoxLayout.Y_AXIS);
+        GridLayout verticalFrame3Layout = new GridLayout(1, 1);
         verticalFrame3.setMaximumSize(new Dimension(260, SCREENHEIGHT));
         verticalFrame3.setLayout(verticalFrame3Layout);
         verticalFrame3.setBorder(BorderFactory.createLineBorder(Color.green));
+
+        JPanel horizontalFrame22 = new JPanel();
+        BoxLayout horizontalFrame22Layout = new BoxLayout(horizontalFrame22, BoxLayout.Y_AXIS);
+        horizontalFrame22.setMaximumSize(new Dimension(260, SCREENHEIGHT));
+        horizontalFrame22.setLayout(horizontalFrame22Layout);
+        horizontalFrame22.setBorder(BorderFactory.createLineBorder(Color.black));
+
+        ArrayList<String> answers = findAnswers(wordGrid);
+        JLabel answerTitle = new JLabel("ANSWERS:");
+        answerTitle.setFont(new Font("Sans-Serif", Font.BOLD ,15));
+        horizontalFrame22.add(answerTitle);
+        System.out.println(answers);
+        for(String a : answers){
+            horizontalFrame22.add(new JLabel(a, SwingConstants.LEFT));
+        }
 
         JOptionPane.showMessageDialog(this, "a");
 
@@ -143,6 +168,7 @@ public class WordSearch extends JFrame implements ActionListener{
         verticalFrame1.add(horizontalFrame3);
         verticalFrame2.add(horizontalFrame11);
         verticalFrame2.add(horizontalFrame12);
+        verticalFrame3.add(horizontalFrame22);
         container.add(verticalFrame1);
         container.add(verticalFrame2);
         container.add(verticalFrame3);
@@ -199,7 +225,7 @@ public class WordSearch extends JFrame implements ActionListener{
                 trackedWordEnd[0] = 0;
                 trackedWordEnd[1] = 0;
             }else if(searchForWord(wordGrid, guess, ROWS, COLS)){
-                System.out.println(guess.toLowerCase());
+                // System.out.println(guess.toLowerCase());
                 if(fileContainsWord){
                     guessPrompt.setText("You already entered this!");
                     guessPrompt.setForeground(Color.red);
@@ -213,14 +239,15 @@ public class WordSearch extends JFrame implements ActionListener{
                     for(int i = 0; i < foundWords.size(); i++){
                         JLabel word = new JLabel(foundWords.get(i));
                         word.setFont(new Font("Sans-Serif", Font.BOLD ,15));
-                        JPanel wordPanel= new JPanel();
-                        wordPanel.setMaximumSize(new Dimension(SCREENWIDTH/2, 30));
-                        FlowLayout layout = new FlowLayout();
-                        layout.setAlignment(FlowLayout.LEFT);
-                        wordPanel.setLayout(layout);
-                        wordPanel.add(word);
-                        wordPanel.setBorder(BorderFactory.createLineBorder(Color.pink));
-                        horizontalFrame12.add(wordPanel);
+                        word.setHorizontalAlignment(SwingConstants.LEFT);
+                        // JPanel wordPanel= new JPanel();
+                        // wordPanel.setMaximumSize(new Dimension(SCREENWIDTH/2, 30));
+                        // FlowLayout layout = new FlowLayout();
+                        // layout.setAlignment(FlowLayout.LEFT);
+                        // wordPanel.setLayout(layout);
+                        // wordPanel.add(word);
+                        // wordPanel.setBorder(BorderFactory.createLineBorder(Color.pink));
+                        horizontalFrame12.add(word);
                     }
                     horizontalFrame12.add(new JLabel(" "));
                 }else{
@@ -270,7 +297,6 @@ public class WordSearch extends JFrame implements ActionListener{
         int sumFrequencies = 0;
         for(int f : letterFrequencies){
             sumFrequencies += f;
-            System.out.print(f + " ");
         }
         char[] letters = new char[sumFrequencies];
         
@@ -300,21 +326,17 @@ public class WordSearch extends JFrame implements ActionListener{
                     if(isVowel){       
                         if(vowelCount < 12){
                             grid[i][j] = letters[randCharIndex];
-                            System.out.println(i + " " + j + " " + "adding " + grid[i][j]);
                             inBounds = true;
                         }else{
                             vowelCount--;
-                            System.out.println(i + " " + j + " " + letters[randCharIndex] + " not accepted " + vowelCount);
                             randCharIndex = (int)(Math.random() * sumFrequencies);
                         }      
                     }else if(!isVowel){
                         if(consonantCount < 27){
                             grid[i][j] = letters[randCharIndex];
-                            System.out.println(i + " " + j + " " + "adding " + grid[i][j]);
                             inBounds = true;
                         }else{
                             consonantCount--;
-                            System.out.println(i + " " + j + " " + letters[randCharIndex] + " not accepted " + consonantCount);
                             randCharIndex = (int)(Math.random() * sumFrequencies);
                         }
                     }
@@ -335,17 +357,6 @@ public class WordSearch extends JFrame implements ActionListener{
     }
 
     public static boolean searchForWord (char[][] grid, String word, int rows, int cols){
-        int [][] possibleDirections = {
-            {-1, -1},
-            {-1, 0},
-            {-1, 1},
-            {0, -1},
-            {0, 1},
-            {1, -1},
-            {1, 0},
-            {1, 1}
-        };
-
         if(word.length() > Math.max(rows, cols)){
             return false;
         }
@@ -401,9 +412,7 @@ public class WordSearch extends JFrame implements ActionListener{
 
         word = word.toLowerCase();
         if(max >= min){
-            int middle = min + (max - min)/2;
-            System.out.println(list[middle]);
-            
+            int middle = min + (max - min)/2;            
             if(list[middle].equals(word)){
                 return true;
             }
@@ -463,7 +472,7 @@ public class WordSearch extends JFrame implements ActionListener{
         }
     }
     
-    public void sortArrayList(ArrayList<String> list){
+    public static void sortArrayList(ArrayList<String> list){
         list.sort(Comparator.naturalOrder());
 
         boolean swapped = true;
@@ -481,5 +490,33 @@ public class WordSearch extends JFrame implements ActionListener{
                 }
             }
         }
+    }
+
+    public static ArrayList<String> findAnswers(char[][] grid){
+        ArrayList<String> answers = new ArrayList<String>();
+        for(int i = 0; i < ROWS; i++){
+            for(int j = 0; j < COLS; j++){
+                for(int[] direction : possibleDirections){
+                    String word = "";
+                    int counter = 0;
+                    while(                            
+                        i + direction[0] * counter >= 0 
+                        && i + direction[0] * counter < ROWS 
+                        && j + direction[1] * counter >= 0
+                        && j + direction[1] * counter < COLS
+                        ){
+                        System.out.println(word);
+                        word += String.valueOf(grid[i + direction[0] * counter][j + direction[1] * counter]);
+                        if(searchFile(word.toLowerCase(), words, 0, FILELINES)){
+                            if(!answers.contains(word))
+                            answers.add(word);
+                        }
+                        counter++;
+                    }
+                }
+            }
+        }
+        sortArrayList(answers);
+        return answers;
     }
 }
