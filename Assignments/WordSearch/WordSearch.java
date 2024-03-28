@@ -20,7 +20,7 @@ import javax.swing.border.LineBorder;
 public class WordSearch extends JFrame implements ActionListener{
     static final int ROWS = 6;
     static final int COLS = 6;
-    static final int SCREENWIDTH = 500;
+    static final int SCREENWIDTH = 780;
     static final int SCREENHEIGHT = 750;
     static JLabel mainMessage = new JLabel("");
     static JLabel guessPrompt = new JLabel();
@@ -51,7 +51,7 @@ public class WordSearch extends JFrame implements ActionListener{
 
         JPanel verticalFrame2 = new JPanel();
         BoxLayout verticalFrame2Layout = new BoxLayout(verticalFrame2, BoxLayout.Y_AXIS);
-        verticalFrame2.setMaximumSize(new Dimension(SCREENWIDTH/2, SCREENHEIGHT));
+        verticalFrame2.setMaximumSize(new Dimension(260, SCREENHEIGHT));
         verticalFrame2.setLayout(verticalFrame2Layout);
         verticalFrame2.setBorder(BorderFactory.createLineBorder(Color.red));
 
@@ -82,7 +82,7 @@ public class WordSearch extends JFrame implements ActionListener{
 
         wordGridPanel = new JPanel();
         wordGridPanel.setPreferredSize(new Dimension(250, 250));
-        wordGridPanel.setBorder(BorderFactory.createLineBorder(Color.black));
+        wordGridPanel.setBorder(BorderFactory.createLineBorder(Color.black, 2));
         wordGridPanel.setBackground(new Color(200, 200, 200));
         
         wordGridPanel.setLayout(wordGridLayout);
@@ -128,6 +128,12 @@ public class WordSearch extends JFrame implements ActionListener{
         BoxLayout horizontalFrame12Layout = new BoxLayout(horizontalFrame12, BoxLayout.Y_AXIS);
         horizontalFrame12.setLayout(horizontalFrame12Layout);
 
+        JPanel verticalFrame3 = new JPanel();
+        BoxLayout verticalFrame3Layout = new BoxLayout(verticalFrame3, BoxLayout.Y_AXIS);
+        verticalFrame3.setMaximumSize(new Dimension(260, SCREENHEIGHT));
+        verticalFrame3.setLayout(verticalFrame3Layout);
+        verticalFrame3.setBorder(BorderFactory.createLineBorder(Color.green));
+
         JOptionPane.showMessageDialog(this, "a");
 
         Container contentPane = getContentPane();
@@ -139,6 +145,7 @@ public class WordSearch extends JFrame implements ActionListener{
         verticalFrame2.add(horizontalFrame12);
         container.add(verticalFrame1);
         container.add(verticalFrame2);
+        container.add(verticalFrame3);
         contentPane.add(container);
         container.getRootPane().setDefaultButton(guessButton);
         
@@ -314,6 +321,16 @@ public class WordSearch extends JFrame implements ActionListener{
                 }
             }
         }
+
+        for(int i = 0; i < rows; i++){
+            for(int j = 0; j < cols; j++){
+                int randX = (int)Math.random() * rows;
+                int randY = (int)Math.random() * cols;
+                char temp = grid[i][j];
+                grid[i][j] = grid[randX][randY];
+                grid[randX][randY] = temp;
+            }
+        }
         return grid;
     }
 
@@ -429,7 +446,7 @@ public class WordSearch extends JFrame implements ActionListener{
         for(int i = 0; i < ROWS; i++){
             for(int j = 0; j < COLS; j++){
                 JLabel character = new JLabel(Character.toString(wordGrid[i][j]), SwingConstants.CENTER);
-                character.setFont(new Font("Sans Serif", Font.BOLD, 34));
+                character.setFont(new Font("Sans Serif", Font.BOLD, 32));
                 character.setBorder(new LineBorder(Color.black, 1));
                 for(int c = 0; c < Math.max(Math.abs(dy), Math.abs(dx)); c++){
                     if(i == trackedWordStart[0] + c * xDirection && j == trackedWordStart[1] + c * yDirection){
