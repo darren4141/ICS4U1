@@ -1,3 +1,30 @@
+//====================================================================================================================================================================================================================================================================
+//
+//"Word Search" Program
+//Darren Liu
+//March 28th, 2024
+//Java 8
+//
+//====================================================================================================================================================================================================================================================================
+//	  
+//Problem definition:	Create a 6x6 grid of characters and scan if it contains a word entered by the user, check if the word exists in a dictionary of words
+//	  
+//Input:            	Guess (text box)
+//	                	Button presses:
+//	                  	Refresh button
+//                      Guess button
+//                      Cheat button
+//	                      
+//Processing:       	Generate or refresh grid of random characters using letter frequency analysis, enforcing a min and max amount of vowels
+//                      when a guess is made, check if it exists on the grid
+//                      if the guess exists on the grid, check if it exists in the dictionary
+//                      find all possible answers on the grid
+//	                  
+//Output:           	Word grid which updates based on what the user guesses (words will highlight in red or green)
+//                      messages that update based on user input (in dicitonary, too short, etc)
+//                      list of correct guesses and list of answers
+//
+//	====================================================================================================================================================================================================================================================================
 package Assignments.WordSearch;
 import java.awt.Color;
 import java.awt.Container;
