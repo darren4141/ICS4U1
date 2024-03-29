@@ -13,107 +13,148 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Scanner;
-
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 
 public class WordSearch extends JFrame implements ActionListener{
-    static final int ROWS = 6;
+    //the following variables are static as they need to be referred to outside of the constructor method
+    static final int ROWS = 6; //declare the number of rows and columns in the word grid
     static final int COLS = 6;
-    static final int SCREENWIDTH = 780;
+
+    static final int SCREENWIDTH = 800; //declare the width and height of the screen in pixels
     static final int SCREENHEIGHT = 750;
-    static JLabel mainMessage = new JLabel("");
-    static JLabel guessPrompt = new JLabel();
-    static TextField guessTextField = new TextField();
-    static char[][] wordGrid;
-    static String[] words;
-    static final int FILELINES = 109582;
+
+    static JLabel guessPrompt = new JLabel(); //a JLabel that displays the status of the guess (in the grid, in the list, repeat word, too short, etc)
+    static TextField guessTextField = new TextField(); //text field for recieving a guess
+    static char[][] wordGrid; //the 2D array of chars to hold the grid of letters
+    static String[] words; //a String array of all of the words in the text file
+    static final int FILELINES = 109582; //constant int representing the amount of words in the text file
+
+    //all of the static JPanel/JLabel variables are static as they need to be changed outside of the constructor method
     static JPanel wordGridPanel;
     static JPanel horizontalFrame12;
     static JPanel horizontalFrame22;
     static JPanel horizontalFrame23;
     static JPanel horizontalFrame252;
     static JLabel scorePrompt;
-    static int totalScore = 0;
-    static boolean cheatsOn = false;
+
+    static int totalScore = 0; //int representing total score, starting at 0
+    static boolean cheatsOn = false; //boolean representing if cheats are turned on or off
+
+    //two int arrays to store the coordinates of the start and end of the current guess
     static int[] trackedWordStart = new int[2];
     static int[] trackedWordEnd = new int[2];
-    static ArrayList<String> foundWords = new ArrayList<String>();
-    static ArrayList<String> answers = new ArrayList<String>();
+
+    static ArrayList<String> foundWords = new ArrayList<String>(); //String arrayList to store the words currently found
+    static ArrayList<String> answers = new ArrayList<String>(); //String arrayList to store the auto generated answers
+
+    //Possible directions you can move around a grid spot, represented with x translation and y translation
     static int [][] possibleDirections = {
-        {-1, -1},
-        {-1, 0},
-        {-1, 1},
-        {0, -1},
-        {0, 1},
-        {1, -1},
-        {1, 0},
-        {1, 1}
+        {-1, -1}, //top left
+        {-1, 0}, //up
+        {-1, 1}, //top right
+        {0, -1}, //left
+        {0, 1}, //right
+        {1, -1}, //bottom left
+        {1, 0}, //bottom
+        {1, 1} //bottom right
     };
+
+    //an array that represents the frequency of the letters relative to one another, based on 10,000 words, ex) for every 43 a's there is 1 z
+    //is adjusted more later to cater for a word search
     static int[] letterFrequencies = {43, 11, 23, 17, 57, 9, 13, 15, 38, 1, 6, 28, 15, 34, 37, 16, 1, 39, 29, 35, 19, 5, 7, 1, 9, 1};
 
+    /*
+     * Method WordSearch:
+     * the following method is a constructor method that is called in the main method
+     * 
+     * @param: none
+     * @return: none
+     */
     public WordSearch(){
-        setTitle("Word Search");
-        setSize(SCREENWIDTH, SCREENHEIGHT);
+        setTitle("Word Search"); //title of the window
+        setSize(SCREENWIDTH, SCREENHEIGHT); //set the size of the window using the constants
 
-        JPanel container = new JPanel();
+        /*
+         * PANEL STRUCTURE:
+         * 
+         * main panel (size of the entire window) --> container
+         * 
+         * the main panel holds: 
+         * - verticalFrame1
+         * - verticalFrame2
+         * - verticalFrame25 (2.5)
+         * - verticalFrame3
+         * 
+         * verticalFrame1 holds:
+         * - horizontalFrame(0-4), which hold various text fields, letter grids, buttons, labels
+         * 
+         * verticalFrame2 holds:
+         * - labels --> main label (Your Guesses:) and list of guesses
+         * 
+         * verticalFrame25 holds:
+         * - labels --> main label (Score: (score)) and list of scores
+         * 
+         * verticalFrame3 holds:
+         * - labels --> main label (ANSWERS:) and list of answers
+         */
+
+        JPanel container = new JPanel(); //main panel
         BoxLayout containerFrame = new BoxLayout(container, BoxLayout.X_AXIS);
         container.setLayout(containerFrame);
-        // container.setBorder(BorderFactory.createLineBorder(Color.black));
+        // container.setBorder(BorderFactory.createLineBorder(Color.black)); //for debugging
 
         JPanel verticalFrame1 = new JPanel();
         BoxLayout verticalFrame1Layout = new BoxLayout(verticalFrame1, BoxLayout.Y_AXIS);
-        verticalFrame1.setMaximumSize(new Dimension(260, SCREENHEIGHT));
+        verticalFrame1.setMaximumSize(new Dimension(260, SCREENHEIGHT)); //set the maximum size
         verticalFrame1.setLayout(verticalFrame1Layout);
-        // verticalFrame1.setBorder(BorderFactory.createLineBorder(Color.orange));
+        // verticalFrame1.setBorder(BorderFactory.createLineBorder(Color.orange)); //for debugging
 
         JPanel verticalFrame2 = new JPanel();
         BoxLayout verticalFrame2Layout = new BoxLayout(verticalFrame2, BoxLayout.Y_AXIS);
-        verticalFrame2.setMaximumSize(new Dimension(150, SCREENHEIGHT));
+        verticalFrame2.setMaximumSize(new Dimension(150, SCREENHEIGHT)); //set the maximum size
         verticalFrame2.setLayout(verticalFrame2Layout);
-        // verticalFrame2.setBorder(BorderFactory.createLineBorder(Color.red));
+        // verticalFrame2.setBorder(BorderFactory.createLineBorder(Color.red)); //for debugging
 
         JPanel verticalFrame25 = new JPanel();
         BoxLayout verticalFrame25Layout = new BoxLayout(verticalFrame25, BoxLayout.Y_AXIS);
-        verticalFrame25.setMaximumSize(new Dimension(150, SCREENHEIGHT));
+        verticalFrame25.setMaximumSize(new Dimension(150, SCREENHEIGHT)); //set the maximum size
         verticalFrame25.setLayout(verticalFrame25Layout);
-        // verticalFrame25.setBorder(BorderFactory.createLineBorder(Color.blue));
+        // verticalFrame25.setBorder(BorderFactory.createLineBorder(Color.blue)); //for debugging
 
         JPanel horizontalFrame0 = new JPanel();
         FlowLayout frame0Layout = new FlowLayout();
-        frame0Layout.setAlignment(FlowLayout.LEFT);
+        frame0Layout.setAlignment(FlowLayout.LEFT); //align elements to the left
         horizontalFrame0.setLayout(frame0Layout);
         horizontalFrame0.setMaximumSize(new Dimension(SCREENWIDTH, 30));
-        JLabel mainMessage = new JLabel("Search for Words! ");
-        mainMessage.setFont(new Font("Sans Serif", Font.BOLD, 18));
+        JLabel mainMessage = new JLabel("Search for Words! "); //set the main message at the top
+        mainMessage.setFont(new Font("Sans Serif", Font.BOLD, 18)); //set the preferred font elements
         JButton refreshButton = new JButton("Refresh");
-        refreshButton.addActionListener(this);
+        refreshButton.addActionListener(this); //allow the button to do things on press by adding an action listener
         horizontalFrame0.add(mainMessage);
         horizontalFrame0.add(refreshButton);
         
         JPanel horizontalFrame1 = new JPanel();
         FlowLayout frame1Layout = new FlowLayout();
         
-        frame1Layout.setAlignment(FlowLayout.LEFT);
+        frame1Layout.setAlignment(FlowLayout.LEFT); //align elements to the left
         
         horizontalFrame1.setLayout(frame1Layout);
         horizontalFrame1.setMaximumSize(new Dimension(SCREENWIDTH, 260));
-        // horizontalFrame1.setBorder(BorderFactory.createLineBorder(Color.red));
+        // horizontalFrame1.setBorder(BorderFactory.createLineBorder(Color.red)); //for debugging
         
-        GridLayout wordGridLayout = new GridLayout();
-        wordGridLayout.setColumns(COLS);
-        wordGridLayout.setRows(ROWS);
+        GridLayout wordGridLayout = new GridLayout(ROWS, COLS); //set the number of rows and columns for the grid layout
 
         wordGridPanel = new JPanel();
         wordGridPanel.setPreferredSize(new Dimension(250, 250));
-        wordGridPanel.setBorder(BorderFactory.createLineBorder(Color.black, 2));
-        wordGridPanel.setBackground(new Color(200, 200, 200));
+        wordGridPanel.setBorder(BorderFactory.createLineBorder(Color.black, 2)); //set the border thickness of the word grid
+        wordGridPanel.setBackground(new Color(200, 200, 200)); //set the background colour of the word grid
         
         wordGridPanel.setLayout(wordGridLayout);
 
-        wordGrid = fillTwoDArray(ROWS, COLS);
+        wordGrid = fillTwoDArray(ROWS, COLS); //fill the word grid char array using the fillTwoDArray method
 
-        printWordGrid(false);
+        printWordGrid(false); //print the grid on the GUI
 
         horizontalFrame1.add(wordGridPanel);
 
@@ -121,7 +162,7 @@ public class WordSearch extends JFrame implements ActionListener{
         FlowLayout frame2Layout = new FlowLayout();
         frame2Layout.setAlignment(FlowLayout.LEFT);
         horizontalFrame2.setLayout(frame2Layout);
-        // horizontalFrame2.setBorder(BorderFactory.createLineBorder(Color.blue));
+        // horizontalFrame2.setBorder(BorderFactory.createLineBorder(Color.blue)); //for debugging
         horizontalFrame2.setMaximumSize(new Dimension(SCREENWIDTH, 40));
         guessTextField.setColumns(9);
         JButton guessButton = new JButton("Guess!");
@@ -137,6 +178,7 @@ public class WordSearch extends JFrame implements ActionListener{
         // horizontalFrame3.setBorder(BorderFactory.createLineBorder(Color.green));
         horizontalFrame3.setMaximumSize(new Dimension(SCREENWIDTH, 30));
         guessPrompt.setText("Make a guess!");
+        guessPrompt.setFont(new Font("Sans Serif", Font.BOLD, 20));
         horizontalFrame3.add(guessPrompt);
 
         JPanel horizontalFrame4 = new JPanel();
@@ -168,7 +210,7 @@ public class WordSearch extends JFrame implements ActionListener{
         horizontalFrame251.add(scorePrompt);
 
         horizontalFrame12 = new JPanel();
-        GridLayout horizontalFrame12Layout = new GridLayout(10000, 1);
+        GridLayout horizontalFrame12Layout = new GridLayout(10000, 1); //use a grid layout with 10000 rows and 1 column to imitate a Y-AXIS box layout amd allow for left alignment
         horizontalFrame12.setLayout(horizontalFrame12Layout);
 
         horizontalFrame252 = new JPanel();
@@ -179,25 +221,27 @@ public class WordSearch extends JFrame implements ActionListener{
         GridLayout verticalFrame3Layout = new GridLayout(1, 1);
         verticalFrame3.setMaximumSize(new Dimension(260, SCREENHEIGHT));
         verticalFrame3.setLayout(verticalFrame3Layout);
-        // verticalFrame3.setBorder(BorderFactory.createLineBorder(Color.green));
+        // verticalFrame3.setBorder(BorderFactory.createLineBorder(Color.green)); //for debugging
 
         horizontalFrame22 = new JPanel();
         BoxLayout horizontalFrame22Layout = new BoxLayout(horizontalFrame22, BoxLayout.Y_AXIS);
         horizontalFrame22.setMaximumSize(new Dimension(130, SCREENHEIGHT));
         horizontalFrame22.setLayout(horizontalFrame22Layout);
-        // horizontalFrame22.setBorder(BorderFactory.createLineBorder(Color.black));
+        // horizontalFrame22.setBorder(BorderFactory.createLineBorder(Color.black)); //for debugging
 
         horizontalFrame23 = new JPanel();
         BoxLayout horizontalFrame23Layout = new BoxLayout(horizontalFrame23, BoxLayout.Y_AXIS);
         horizontalFrame23.setMaximumSize(new Dimension(130, SCREENHEIGHT));
         horizontalFrame23.setLayout(horizontalFrame23Layout);
-        // horizontalFrame23.setBorder(BorderFactory.createLineBorder(Color.black));
+        // horizontalFrame23.setBorder(BorderFactory.createLineBorder(Color.black)); //for debugging
 
-        answers = findAnswers(wordGrid);
+        answers = findAnswers(wordGrid); //populate the arraylist answers using the find answers method
 
-        JOptionPane.showMessageDialog(this, "a");
+        JOptionPane.showMessageDialog(this, "a"); //an option pane that will pop up before the program runs explaining the rules and how the game works
 
-        Container contentPane = getContentPane();
+        Container contentPane = getContentPane(); //main container
+
+        //configure layout
         verticalFrame1.add(horizontalFrame0);
         verticalFrame1.add(horizontalFrame1);
         verticalFrame1.add(horizontalFrame2);
@@ -214,6 +258,8 @@ public class WordSearch extends JFrame implements ActionListener{
         container.add(verticalFrame25);
         container.add(verticalFrame3);
         contentPane.add(container);
+
+        //setDefaultButton makes the guessButton the default button, meaning it will press when enter is pressed
         container.getRootPane().setDefaultButton(guessButton);
         
         //configure settings
@@ -223,94 +269,124 @@ public class WordSearch extends JFrame implements ActionListener{
     }
 
     public static void main(String[] args) throws FileNotFoundException, InterruptedException{
-        File wordList = new File("Assignments/WordSearch/wordlist.txt");
-        Scanner fileReader = new Scanner(wordList);
-        words = new String[FILELINES];
+        File wordList = new File("Assignments/WordSearch/wordlist.txt"); //declare a new file of the wordlist
+        Scanner fileReader = new Scanner(wordList); //create a Scanner that reads from the file
+        words = new String[FILELINES]; //assign the String array words to have a size of the number of words in the file
 
+        //iterate through the file and populate the array with the words in the text file
         for(int i = 0; i < FILELINES && fileReader.hasNext(); i++){
             words[i] = fileReader.next();
         }
 
         fileReader.close();
 
+        //modify the letterFrequencies array to make the differences less drastic
         for(int i = 0; i < letterFrequencies.length; i++){
-            letterFrequencies[i] -= ((letterFrequencies[i]-1) * (letterFrequencies[i]-1)) * 0.005;
-            letterFrequencies[i] *= 0.3;
-            letterFrequencies[i]++;
+            letterFrequencies[i] -= ((letterFrequencies[i]-1) * (letterFrequencies[i]-1)) * 0.005; //subtract the value of letterFrequencies squared so that larger values have more subtracted from them
+            letterFrequencies[i] *= 0.3; //multiply by 0.3 across the board
+            letterFrequencies[i]++; //increment once so there are no 0's
         }
 
-        WordSearch wordSearch = new WordSearch();
+        WordSearch wordSearch = new WordSearch(); //call the constructor method
     }
     
+    /*
+     * actionPerforemed method that will run whenever a button is pressed
+     * 
+     * @param: ActionEvent event --> an ActionEvent type object that represents the action that took place
+     */
     public void actionPerformed(ActionEvent event){
-        String command = event.getActionCommand();
-        Boolean fileContainsWord = false;
+        String command = event.getActionCommand(); //extract the String value of the ActionEvent object
+        Boolean fileContainsWord = false; //boolean to represent if the file contains selected word
 
-        if(command.equals("Guess!")){
-            String guess = guessTextField.getText().toUpperCase();
-            guessTextField.setText("");
-            fileContainsWord = searchFile(guess, words, 0, FILELINES-1);
-            if(guess.length() == 0){
-                guessPrompt.setText("Enter a word!");
+        if(command.equals("Guess!")){ //if the "Guess!" button is pressed
+            String guess = guessTextField.getText().toUpperCase(); //assign the text in the textfield to a String, making it all uppercase
+            guessTextField.setText(""); //empty the text field after reading the value
+            fileContainsWord = searchFile(guess, words, 0, FILELINES-1); //boolean fileContainsWord is assigned to return of the method searching the file
+            if(guess.length() == 0){ //if guess is null
+                guessPrompt.setText("Enter a word!"); //update guess prompt
                 guessPrompt.setForeground(Color.black);
+                //empty tracked word
                 trackedWordStart[0] = 0;
                 trackedWordStart[1] = 0;
                 trackedWordEnd[0] = 0;
                 trackedWordEnd[1] = 0;
-            }else if(guess.length() == 1){
-                guessPrompt.setText("Too short!");
+            }else if(guess.length() == 1){ //if guess is too short
+                guessPrompt.setText("Too short!");//update guess prompt
                 guessPrompt.setForeground(Color.red);
+                //empty tracked word
                 trackedWordStart[0] = 0;
                 trackedWordStart[1] = 0;
                 trackedWordEnd[0] = 0;
                 trackedWordEnd[1] = 0;
-            }else if(guess.length() > Math.max(ROWS, COLS)){
-                guessPrompt.setText("Too long!");
+            }else if(guess.length() > Math.max(ROWS, COLS)){//if guess is too long
+                guessPrompt.setText("Too long!");//update guess prompt
                 guessPrompt.setForeground(Color.red);
+                //empty tracked word
                 trackedWordStart[0] = 0;
                 trackedWordStart[1] = 0;
                 trackedWordEnd[0] = 0;
                 trackedWordEnd[1] = 0;
-            }else if(searchForWord(wordGrid, guess, ROWS, COLS)){
-                // System.out.println(guess.toLowerCase());
-                if(fileContainsWord){
-                    guessPrompt.setText("You already entered this!");
+            }else if(searchForWord(wordGrid, guess, ROWS, COLS)){//is the word on the grid?
+                // System.out.println(guess.toLowerCase()); //for debugging
+                if(fileContainsWord){//if the word is in the file
+                    guessPrompt.setText("You already entered this!"); //update prompt
                     guessPrompt.setForeground(Color.red);
-                    horizontalFrame12.removeAll();
-                    horizontalFrame252.removeAll();
-                    if(!foundWords.contains(guess)){
-                        foundWords.add(guess);
-                        guessPrompt.setText("YES, AND IN DICTIONARY");
-                        guessPrompt.setForeground(new Color(33, 168, 7));
-                        int score = 0;
-                        for(int j = 0; j < guess.length(); j++){
-                            score += (30 - letterFrequencies[(int)guess.charAt(j)-65]) * 1.5;
+                    if(!foundWords.contains(guess)){ //if the word has not already been guessed
+                        //clear frames
+                        horizontalFrame12.removeAll();
+                        horizontalFrame252.removeAll();
+                        foundWords.add(guess); //add new word to arraylist
+                        guessPrompt.setText("YES, AND IN DICTIONARY"); //update prompt
+                        guessPrompt.setForeground(new Color(33, 168, 7)); //update prompt color
+
+                        int score = 0; //declare int score as 0
+
+                        /*
+                         * the scoring system is based on two things:
+                         * - the length of the character --> "score *= guess.length();"
+                         * - the "rarity" of the letters --> for loop
+                         */
+                        for(int j = 0; j < guess.length(); j++){//iterate through the letters in the word
+                            score += (30 - letterFrequencies[(int)guess.charAt(j)-65]) * 1.5; //assign a numerical value based on how infrequent the letter is
                         }
-                        score *= guess.length();
-                        totalScore += score;
+
+                        score *= guess.length(); //multiply the score by the length 
+
+                        totalScore += score; //sum the total score
+
+                        //iterate through the found words
                         for(int i = 0; i < foundWords.size(); i++){
+
+                            //recalculate the score
                             int thisScore = 0;
                             for(int j = 0; j < foundWords.get(i).length(); j++){
                                 thisScore += (30 - letterFrequencies[(int)foundWords.get(i).charAt(j)-65]) * 1.5;
                             }
                             thisScore *= foundWords.get(i).length();
+
+                            //declare labels for score and word
                             JLabel scoreLabel = new JLabel(Integer.toString(thisScore));
                             JLabel word = new JLabel(foundWords.get(i));
                             word.setFont(new Font("Sans-Serif", Font.BOLD ,15));
                             scoreLabel.setFont(new Font("Sans-Serif", Font.BOLD ,15));
-                            scoreLabel.setHorizontalAlignment(SwingConstants.LEFT);
+                            scoreLabel.setHorizontalAlignment(SwingConstants.LEFT); //align score and word to the left
                             word.setHorizontalAlignment(SwingConstants.LEFT);
+
+                            //add elements to their respective panels
                             horizontalFrame12.add(word);
                             horizontalFrame252.add(scoreLabel);
                         }
                     }
-                    sortArrayList(foundWords);
-                    scorePrompt.setText("Score: " + totalScore);
+                    sortArrayList(foundWords); //sort the arraylist based on length first, then alphabetically
+                    scorePrompt.setText("Score: " + totalScore); //update text for total score
                 }else{
-                    guessPrompt.setText("YES, NOT IN DICTIONARY");
+                    guessPrompt.setText("YES, NOT IN DICTIONARY"); //if word is on the grid
                     guessPrompt.setForeground(Color.red);
                 }
             }else{
+
+                //reset tracked word
                 trackedWordStart[0] = 0;
                 trackedWordStart[1] = 0;
                 trackedWordEnd[0] = 0;
@@ -318,27 +394,34 @@ public class WordSearch extends JFrame implements ActionListener{
                 guessPrompt.setText("NOT ON THE GRID");
                 guessPrompt.setForeground(Color.red);
             }
+
+            //reprint the word grid
+            printWordGrid(fileContainsWord);
         }
 
-        if(command.equals("Refresh")){
-            guessPrompt.setText("Enter a word!");
+        if(command.equals("Refresh")){ //if the refresh button is hit
+            guessPrompt.setText("Enter a word!"); //update text
             guessPrompt.setForeground(Color.black);
-            wordGrid = fillTwoDArray(ROWS, COLS);
-            foundWords.clear();
-            horizontalFrame12.removeAll();
+
+            wordGrid = fillTwoDArray(ROWS, COLS); //populate the char array with new letters
+            foundWords.clear(); //clear found words
+            horizontalFrame12.removeAll(); //clear displays
             horizontalFrame252.removeAll();
-            trackedWordStart[0] = 0;
+            trackedWordStart[0] = 0; //reset tracked word
             trackedWordStart[1] = 0;
             trackedWordEnd[0] = 0;
             trackedWordEnd[1] = 0;
-            totalScore = 0;
-            answers.clear();
-            answers = findAnswers(wordGrid);
-            horizontalFrame22.removeAll();
+            totalScore = 0; //reset score
+            scorePrompt.setText("Score: " + totalScore);
+            answers.clear(); //empty answers arraylist
+            answers = findAnswers(wordGrid); //repopulate answers
+            horizontalFrame22.removeAll(); //clear displays
             horizontalFrame23.removeAll();
-            if(cheatsOn){
+            if(cheatsOn){ //if cheats are on, show the answers
                 displayAnswer();
             }
+
+            //revalidate and repaint all affected panels
             wordGridPanel.revalidate();
             wordGridPanel.repaint(); 
             horizontalFrame12.revalidate();
@@ -349,18 +432,19 @@ public class WordSearch extends JFrame implements ActionListener{
             horizontalFrame22.repaint();
             horizontalFrame23.revalidate();
             horizontalFrame23.repaint();
+            printWordGrid(fileContainsWord); //reprint word grid
         }
 
-        if(command.equals("Cheat!")){
+        if(command.equals("Cheat!")){ //if cheat button is pressed
             if(cheatsOn){
-                hideAnswer();
+                hideAnswer(); //display the answer tab
             }else{
-                displayAnswer();
+                displayAnswer(); //hide the answer tab
             }
-            cheatsOn = !cheatsOn;
+            cheatsOn = !cheatsOn; //toggle the boolean
         }
 
-        printWordGrid(fileContainsWord);
+        //revalidate and repaint all affected panels
         wordGridPanel.revalidate();
         wordGridPanel.repaint(); 
         horizontalFrame12.revalidate();
@@ -369,32 +453,52 @@ public class WordSearch extends JFrame implements ActionListener{
         horizontalFrame252.repaint();
     }
 
+    /*
+     * Method fillTwoDArray: the purpose of this method is to fill a 2D array with char type variables using letter frequency analysis as well as a min/max cap on vowels
+     * 
+     * @param --> int rows, cols: the number of rows and columns in the 2D array
+     * @return --> char[][] --> the filled 2D array
+     */
     public static char[][] fillTwoDArray(int rows, int cols){
+
+        //declare a counter for the number of vowels and consonants, start at 0
         int vowelCount = 0;
         int consonantCount = 0;
 
+        //declare a new char array representing the grid
         char[][] grid = new char[rows][cols];
+
+        /*
+         * HOW DOES THE FREQUENCY ANALYSIS WORK?
+         * 
+         * 1. make an array letterFrequencies with size 26 which has the relative frequencies of each letter
+         * 2. fill a new array letters with the size of all of the sums of the frequencies, fill the array with n amount of letter x: ex 26 a's, 12 b's, ... 2 z's
+         * 3. fill the word grid with a random element from array letters
+         */
         int sumFrequencies = 0;
-        for(int f : letterFrequencies){
-            sumFrequencies += f;
+        for(int f : letterFrequencies){ //iterate through letterFrequencies
+            sumFrequencies += f; //sum the contents of letterFrequencies
         }
-        char[] letters = new char[sumFrequencies];
+        char[] letters = new char[sumFrequencies]; //declare a new char array with the size of sumFrequencies
         
+        //variable to tell where we are in the process of filling the letters array
         int mark = 0;
 
+        //iterate through each element in letterFrequencies
         for(int i = 0; i < letterFrequencies.length; i++){
-            for(int j = 0; j < letterFrequencies[i]; j++){
+            for(int j = 0; j < letterFrequencies[i]; j++){//add letter[j], letterfrequencies[i] times
                 letters[mark + j] = (char)(65+i);
             }
-            mark += letterFrequencies[i];
+            mark += letterFrequencies[i]; //increment mark so that on the next pass we add onto higher indicies
         }
 
         for(int i = 0; i < rows; i++){
-            for(int j = 0; j < cols; j++){
-                boolean isVowel = false;
-                boolean inBounds = false;
-                int randCharIndex = (int)(Math.random() * sumFrequencies);
+            for(int j = 0; j < cols; j++){//loop through array
+                boolean isVowel = false; //assume character is a vowel
+                boolean inBounds = false; //assume character is within the bounds of the array (indicies 0-5)
+                int randCharIndex = (int)(Math.random() * sumFrequencies); //find a random index
 
+                //if the letter is vowel
                 if(letters[randCharIndex] == 'A' || letters[randCharIndex] == 'E' || letters[randCharIndex] == 'I' || letters[randCharIndex] == 'O' || letters[randCharIndex] == 'U'){
                     vowelCount++;
                     isVowel = true;
