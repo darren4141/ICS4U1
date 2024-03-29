@@ -237,7 +237,15 @@ public class WordSearch extends JFrame implements ActionListener{
 
         answers = findAnswers(wordGrid); //populate the arraylist answers using the find answers method
 
-        JOptionPane.showMessageDialog(this, "a"); //an option pane that will pop up before the program runs explaining the rules and how the game works
+        //an option pane that will pop up before the program runs explaining the rules and how the game works
+        JOptionPane.showMessageDialog(this, 
+        "Welcome to the Word Search program! Here are some rules:" + 
+        "\n1. Words must be at least 2 characters" +
+        "\n2. Words can be found horizontally, vertically, diagonally, backwards and forwards (8 directions in total)" +
+        "\n3. Repeats will not count" +
+        "\n3. Scoring is based on both the length of the word, and how rare the letters are (z is more points!)" + 
+        "\n4. Answer key can be used as a last resort or if you hate fun!" + 
+        "\n5. HAVE FUN"); 
 
         Container contentPane = getContentPane(); //main container
 
@@ -337,7 +345,7 @@ public class WordSearch extends JFrame implements ActionListener{
                         horizontalFrame12.removeAll();
                         horizontalFrame252.removeAll();
                         foundWords.add(guess); //add new word to arraylist
-                        guessPrompt.setText("YES, AND IN DICTIONARY"); //update prompt
+                        guessPrompt.setText("GOOD JOB!"); //update prompt
                         guessPrompt.setForeground(new Color(33, 168, 7)); //update prompt color
 
                         int score = 0; //declare int score as 0
@@ -381,7 +389,7 @@ public class WordSearch extends JFrame implements ActionListener{
                     sortArrayList(foundWords); //sort the arraylist based on length first, then alphabetically
                     scorePrompt.setText("Score: " + totalScore); //update text for total score
                 }else{
-                    guessPrompt.setText("YES, NOT IN DICTIONARY"); //if word is on the grid
+                    guessPrompt.setText("NOT IN DICTIONARY"); //if word is on the grid
                     guessPrompt.setForeground(Color.red);
                 }
             }else{
@@ -506,20 +514,21 @@ public class WordSearch extends JFrame implements ActionListener{
                     consonantCount++;
                 }
 
+                //while loop to rerun if we need to regenerate letters
                 while(!inBounds){
                     if(isVowel){       
                         if(vowelCount < 12){
-                            grid[i][j] = letters[randCharIndex];
+                            grid[i][j] = letters[randCharIndex]; //assign value
                             inBounds = true;
-                        }else{
+                        }else{ //if we have too many vowels, generate a new character
                             vowelCount--;
                             randCharIndex = (int)(Math.random() * sumFrequencies);
                         }      
                     }else if(!isVowel){
                         if(consonantCount < 27){
-                            grid[i][j] = letters[randCharIndex];
+                            grid[i][j] = letters[randCharIndex]; //assign value
                             inBounds = true;
-                        }else{
+                        }else{ //if we have too many consonants, generate a new character
                             consonantCount--;
                             randCharIndex = (int)(Math.random() * sumFrequencies);
                         }
@@ -528,10 +537,13 @@ public class WordSearch extends JFrame implements ActionListener{
             }
         }
 
+        //SCRAMBLE THE GRID SINCE WITH THESE LIMITATIONS, THERE MAY BE MORE VOWELS AT THE TOP THAN BOTTOM
         for(int i = 0; i < rows; i++){
             for(int j = 0; j < cols; j++){
-                int randX = (int)Math.random() * rows;
+                int randX = (int)Math.random() * rows; //generate random index
                 int randY = (int)Math.random() * cols;
+
+                //swap with random index
                 char temp = grid[i][j];
                 grid[i][j] = grid[randX][randY];
                 grid[randX][randY] = temp;
@@ -540,24 +552,37 @@ public class WordSearch extends JFrame implements ActionListener{
         return grid;
     }
 
+    /*
+     * Method searchForWord is a method that searches for a given word within the char grid
+     * 
+     * @param:
+     * - char[][]grid: the grid that holds the characters
+     * - String word: the word to search for
+     * - int rows, cols: the dimensions of the grid
+     * 
+     * @return: boolean searchForWord --> if the word is in the grid or not
+     */
     public static boolean searchForWord (char[][] grid, String word, int rows, int cols){
+
+        //if the word exceeds maximum length
         if(word.length() > Math.max(rows, cols)){
             return false;
         }
 
+        //iterate through the grid elements
         for(int i = 0; i < rows; i++){
             for(int j = 0; j < cols; j++){
-                if(grid[i][j] == word.charAt(0)){
-                    for(int[]direction : possibleDirections){
+                if(grid[i][j] == word.charAt(0)){ //if the element in the grid matches the first letter in the word
+                    for(int[]direction : possibleDirections){ //check every possible direction around the first letter
                         if(
                             i + direction[0] >= 0 
                             && i + direction[0] < rows 
                             && j + direction[1] >= 0
                             && j + direction[1] < cols
                             && grid[i+direction[0]][j+direction[1]] == word.charAt(1)
-                        ){
-                            if(sequence(grid, word, rows, cols, direction[0], direction[1], i, j)){
-                                return true;
+                        ){//if the direction is in bounds (not a corner or edge) and the second character is equal to the second character in the word
+                            if(sequence(grid, word, rows, cols, direction[0], direction[1], i, j)){ //run the method sequence which will keep searching in the same direction and return true or false
+                                return true; //return true if the word is in the grid (decided by sequence)
                             }
                         }
                     }
@@ -567,59 +592,91 @@ public class WordSearch extends JFrame implements ActionListener{
         return false;
     }
 
+    /*
+     * method sequence is meant to be a continuation of the searchForWord method and serves the same purpose
+     * 
+     * @param:
+     * - char[][]grid: the grid that holds the characters
+     * - String word: the word to search for
+     * - int rows, cols: the dimensions of the grid
+     * - int xDirection, yDirection: the direction of the search, decided in the searchForWord method before this method is called
+     * - int x, y: the starting position in the grid
+     */
     public static boolean sequence(char[][] grid, String word, int rows, int cols, int xDirection, int yDirection, int x, int y){
-        boolean wordIsEqual = true;
-        int charactersScanned = 2;
+        boolean wordIsEqual = true; //word is equal to begin with --> first two characters
+        int charactersScanned = 2; //we already checked 2 characters
         while (wordIsEqual) {
-            if(charactersScanned == word.length()){
+            if(charactersScanned == word.length()){ //if our current word is good and the length matches, we are done
+                //log the tracked word values
                 trackedWordStart[0] = x;
                 trackedWordStart[1] = y;
                 trackedWordEnd[0] = x + xDirection * charactersScanned;
                 trackedWordEnd[1] = y + yDirection * charactersScanned;
                 return true;
-            }else if(
+            }else if(//if we need to keep searching
+            //check that we don't go out of bounds
                 x + xDirection * charactersScanned >= 0
                 && x + xDirection * charactersScanned < rows
                 && y + yDirection * charactersScanned >= 0
                 && y + yDirection * charactersScanned < cols
-                && grid[x + xDirection * charactersScanned][y + yDirection * charactersScanned] == word.charAt(charactersScanned)
+                && grid[x + xDirection * charactersScanned][y + yDirection * charactersScanned] == word.charAt(charactersScanned) //check if the current character is equal to the nth element in the array
                 ){
-                charactersScanned++;
+                charactersScanned++; //increment charactersScanned
             }else{
-                wordIsEqual = false;
+                wordIsEqual = false; 
             }
         }
         return wordIsEqual;
     }
 
+    /*
+     * method searchFile searches the text file for the given input word using recursive binary search
+     * 
+     * @param:
+     * - String word: the word we are searching for
+     * - String[] list: the list of words in the text file
+     * - int min, max: the min and max to be used in binary search
+     * 
+     * @return:
+     * - boolean --> if the word is in the file or not
+     */
     public static boolean searchFile(String word, String[] list, int min, int max){
 
         word = word.toLowerCase();
-        if(max >= min){
-            int middle = min + (max - min)/2;            
-            if(list[middle].equals(word)){
+        if(max >= min){//if this isn't true, we can return false
+            int middle = min + (max - min)/2;//find the middle element
+            if(list[middle].equals(word)){//base case
                 return true;
             }
 
-            if(list[middle].compareTo(word) < 0){
+            if(list[middle].compareTo(word) < 0){ //if word is greater than middle, repeat search on top half
                 return searchFile(word, list, middle + 1, max);
             }
 
-            if(list[middle].compareTo(word) > 0){
+            if(list[middle].compareTo(word) > 0){ //if word is less than middle, repeat search on bottom half
                 return searchFile(word, list, min, middle-1);
             }
         }
         return false;
     }
 
+    /*
+     * method printWordGrid is meant to reprint the grid of characters and include any special highlighting rules
+     * 
+     * @param: boolean wordIsGood --> if the word is in the list or not
+     * @return: void
+     */
     public void printWordGrid(boolean wordIsGood){
         wordGridPanel.removeAll();
+
+        //calculate the x and y length of the word
         int dy = trackedWordEnd[1] - trackedWordStart[1];
         int dx = trackedWordEnd[0] - trackedWordStart[0];
 
         int yDirection;
         int xDirection;
 
+        //find the x and y directions based on dy and dx
         if(dy == 0){
             yDirection = 0;
         }else if(dy < 0){
@@ -636,13 +693,18 @@ public class WordSearch extends JFrame implements ActionListener{
             xDirection = 1;
         }
 
+        //iterate through the grid
         for(int i = 0; i < ROWS; i++){
             for(int j = 0; j < COLS; j++){
                 JLabel character = new JLabel(Character.toString(wordGrid[i][j]), SwingConstants.CENTER);
                 character.setFont(new Font("Sans Serif", Font.BOLD, 32));
                 character.setBorder(new LineBorder(Color.black, 1));
+
+                //iterate through the characters we should highlight
                 for(int c = 0; c < Math.max(Math.abs(dy), Math.abs(dx)); c++){
+                    //if the character is one of the ones we should highlight
                     if(i == trackedWordStart[0] + c * xDirection && j == trackedWordStart[1] + c * yDirection){
+                        //set background colour depending on if the word is in the list or not
                         if(wordIsGood){
                             character.setBackground(Color.green);
                         }else{
@@ -656,6 +718,10 @@ public class WordSearch extends JFrame implements ActionListener{
         }
     }
     
+    /*
+     * Method displayAnswer: this method is made to display the answer key
+     * @return: void
+     */
     public static void displayAnswer(){
         JLabel answerTitle = new JLabel("ANSWERS:");
         answerTitle.setFont(new Font("Sans-Serif", Font.BOLD ,15));
@@ -664,25 +730,41 @@ public class WordSearch extends JFrame implements ActionListener{
         horizontalFrame22.add(answerTitle);
         horizontalFrame23.add(fillerTitle);
         System.out.println(answers);
+        //iterate through the answers, printing them two at a time
         for(int i = 0; i < answers.size(); i+=2){
             horizontalFrame22.add(new JLabel(answers.get(i), SwingConstants.LEFT));
-            if(i+1 < answers.size()){
+            if(i+1 < answers.size()){//if the second one exceeds the length, don't print it
                 horizontalFrame23.add(new JLabel(answers.get(i+1), SwingConstants.LEFT));
             }
         }
     }
 
+    /*
+     * Method hideAnswer: method meant to hide the answer key
+     * @return: none
+     */
     public static void hideAnswer(){
+        //remove all elements from panels
         horizontalFrame22.removeAll();
         horizontalFrame23.removeAll();
     }
 
+    /*
+     * Method sortArrayList: sort an arraylist of strings based on length first, then alphabetically
+     * 
+     * @param: ArrayList<String> list --> the arraylist to be sorted
+     */
     public static void sortArrayList(ArrayList<String> list){
+        //sort alphabetiacally first
         list.sort(Comparator.naturalOrder());
 
+        //run bubble sort, which we can use since we are only using this on the arraylist of answers which will realistacally never exceed 1000 on a 6x6 grid
+        //bubble sort works since it is a stable sorting method and maintians the relative order of elements with the same length
+
+        //bubble sort code
         boolean swapped = true;
         int i = 0;
-
+        
         while(swapped) {
             swapped = false;
             i++;
@@ -697,32 +779,40 @@ public class WordSearch extends JFrame implements ActionListener{
         }
     }
 
+    /*
+     * Method findAnswers: this method is meant to find all the possible answers to the word search
+     * 
+     * @param: char[][]grid --> the grid to be searched for answers
+     * @return: ArrayList<String> --> an arrayList with all of the answers
+     */
     public static ArrayList<String> findAnswers(char[][] grid){
         ArrayList<String> answers = new ArrayList<String>();
+
+        //iterate through each element
         for(int i = 0; i < ROWS; i++){
             for(int j = 0; j < COLS; j++){
-                for(int[] direction : possibleDirections){
-                    String word = "";
+                for(int[] direction : possibleDirections){//iterate through directions
+                    String word = ""; //start with an empty word
                     int counter = 0;
                     while(                            
                         i + direction[0] * counter >= 0 
                         && i + direction[0] * counter < ROWS 
                         && j + direction[1] * counter >= 0
                         && j + direction[1] * counter < COLS
-                        ){
-                        System.out.println(word);
-                        word += String.valueOf(grid[i + direction[0] * counter][j + direction[1] * counter]);
-                        if(searchFile(word.toLowerCase(), words, 0, FILELINES)){
-                            if(!answers.contains(word) && word.length() > 1){
-                                answers.add(word);
+                        ){//while we are not leaving the bounds of the array
+                        // System.out.println(word); //for debugging
+                        word += String.valueOf(grid[i + direction[0] * counter][j + direction[1] * counter]); //concatenate the word with the current letter
+                        if(searchFile(word.toLowerCase(), words, 0, FILELINES)){ //check if the concatenated word is in the file
+                            if(!answers.contains(word) && word.length() > 1){// if it is and it's unique and it is not a single character,
+                                answers.add(word); //add the word
                             }
                         }
-                        counter++;
+                        counter++; //increment counter
                     }
                 }
             }
         }
-        sortArrayList(answers);
+        sortArrayList(answers); //sort the arrayList of answers
         return answers;
     }
-}
+}//end of class
