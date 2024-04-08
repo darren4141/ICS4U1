@@ -26,5 +26,39 @@ public class L10Searching {
 
         return -1;
     }
+    
+    public static int binarySearchIterative(String[] names, String target, int low, int high){
+
+        while(high < low){
+            int middle = low + ((high-low) / 2);
+            if(names[middle].equals(target)){
+                return middle;
+            }else if(names[middle].compareTo(target) > 0){
+                high = middle -1;
+            }else{
+                low = middle + 1;
+            }
+        }
+
+        return -1;
+
+    }
+
+    public static int binarySearchRecursive(String[] names, String target, int low, int high){
+        if(high < low){
+            return -1;
+        }
+
+        int middle = low + ((high-low)/2);
+
+        if(names[middle].equals(target)){
+            return middle;
+        }else if(names[middle].compareTo(target) > 0){
+            return binarySearchRecursive(names, target, low, middle - 1);
+        }else{
+            return binarySearchRecursive(names, target, middle + 1, high);
+        }
+
+    }
 
 }
