@@ -22,9 +22,9 @@ public class L10SearchingExercise{
 
         sortNames(names, numbers);
 
-        for(String s : names){
-            System.out.println(s + " ");
-        }
+        // for(String s : names){
+        //     System.out.println(s + " ");
+        // }
 
         System.out.println("Located at index: " + findName(names, "a".toLowerCase(), 0, NUMNAMES));
     }
@@ -56,15 +56,15 @@ public class L10SearchingExercise{
             return -1;
         }
 
-        System.out.println("Checking " + names[middle]);
+        // System.out.println("Checking " + names[middle]);
 
         if(names[middle].equals(name)){
             return middle;
         }else if(names[middle].compareTo(name) > 0){
-            System.out.println("LESS");
+            // System.out.println("LESS");
             return findName(names, name, min, middle-1);
         }else{
-            System.out.println("GREATER");
+            // System.out.println("GREATER");
             return findName(names, name, middle + 1, max);
         }
     }
