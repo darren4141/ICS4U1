@@ -205,7 +205,7 @@ public class WordSearch extends JFrame implements ActionListener{
         // horizontalFrame3.setBorder(BorderFactory.createLineBorder(Color.green));
         horizontalFrame3.setMaximumSize(new Dimension(SCREENWIDTH, 30));
         guessPrompt.setText("Make a guess!");
-        guessPrompt.setFont(new Font("Sans Serif", Font.BOLD, 20));
+        guessPrompt.setFont(new Font("Sans Serif", Font.BOLD, 18));
         horizontalFrame3.add(guessPrompt);
 
         JPanel horizontalFrame4 = new JPanel();
@@ -372,7 +372,8 @@ public class WordSearch extends JFrame implements ActionListener{
                         horizontalFrame12.removeAll();
                         horizontalFrame252.removeAll();
                         foundWords.add(guess); //add new word to arraylist
-                        guessPrompt.setText("GOOD JOB!"); //update prompt
+                        sortArrayList(foundWords); //sort the arraylist based on length first, then alphabetically
+                        guessPrompt.setText("YES GRID, YES DICTIONARY"); //update prompt
                         guessPrompt.setForeground(new Color(33, 168, 7)); //update prompt color
 
                         int score = 0; //declare int score as 0
@@ -413,20 +414,24 @@ public class WordSearch extends JFrame implements ActionListener{
                             horizontalFrame252.add(scoreLabel);
                         }
                     }
-                    sortArrayList(foundWords); //sort the arraylist based on length first, then alphabetically
                     scorePrompt.setText("Score: " + totalScore); //update text for total score
                 }else{
-                    guessPrompt.setText("NOT IN DICTIONARY"); //if word is on the grid
+                    guessPrompt.setText("YES GRID, NO DICTIONARY"); //if word is on the grid
                     guessPrompt.setForeground(Color.red);
                 }
             }else{
+
+                if(fileContainsWord){
+                    guessPrompt.setText("NO GRID, YES DICTIONARY");
+                }else{
+                    guessPrompt.setText("NO GRID, NO DICTIONARY");
+                }
 
                 //reset tracked word
                 trackedWordStart[0] = 0;
                 trackedWordStart[1] = 0;
                 trackedWordEnd[0] = 0;
                 trackedWordEnd[1] = 0;
-                guessPrompt.setText("NOT ON THE GRID");
                 guessPrompt.setForeground(Color.red);
             }
 
