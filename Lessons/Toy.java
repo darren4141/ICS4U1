@@ -1,3 +1,4 @@
+package Lessons;
 /*Name: J. Anandarajan
  * File: Toy.java
  * Purpose: Introduce OOP using Toy.java 

@@ -1,3 +1,4 @@
+package Lessons;
 public class MainToy {
     static Toy toy1 = new Toy("Ball", 2, 5);
     static Toy toy2 = new Toy("Doll", 4, 8);
