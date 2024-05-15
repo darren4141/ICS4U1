@@ -1,6 +1,6 @@
 package Lessons.Polymorphism;
 
-public abstract class Circle extends Shape{
+public class Circle extends Shape{
 
     @Override
     public void draw() {

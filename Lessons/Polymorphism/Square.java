@@ -1,6 +1,6 @@
 package Lessons.Polymorphism;
 
-public abstract class Square extends Shape{
+public class Square extends Shape{
     @Override
     public void draw() {
         System.out.println("This is a []");
