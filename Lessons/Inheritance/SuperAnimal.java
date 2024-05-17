@@ -4,19 +4,73 @@ public class SuperAnimal extends Animal{
     private boolean wings;
     private boolean canTeleport;
 
+    public SuperAnimal(){
+        super.setName("default");
+        super.setSpecies("default");
+        super.setSize(0);
+        super.setOffspring(0);
+        super.setColour("unknown");
+    }
+
+    public SuperAnimal(String name, String species){
+        super.setName(name);
+        super.setSpecies(species);
+        super.setSize(0);
+        super.setOffspring(0);
+        super.setColour("unknown");
+    }
+
+    public SuperAnimal(String name, String species, boolean wings, boolean canTeleport){
+        super.setName(name);
+        super.setSpecies(species);
+        super.setSize(0);
+        super.setOffspring(0);
+        super.setColour("unknown");
+        this.wings = wings;
+        this.canTeleport = canTeleport;
+    }
+
+    public SuperAnimal(String name, String species, double size, boolean wings, boolean canTeleport){
+        super.setName(name);
+        super.setSpecies(species);
+        super.setSize(size);
+        super.setOffspring(0);
+        super.setColour("unknown");
+        this.wings = wings;
+        this.canTeleport = canTeleport;
+    }
+
+    public SuperAnimal(String name, String species, double size, String colour, boolean wings, boolean canTeleport){
+        super.setName(name);
+        super.setSpecies(species);
+        super.setSize(size);
+        super.setOffspring(0);
+        super.setColour(colour);
+        this.wings = wings;
+        this.canTeleport = canTeleport;
+    }
+
+    public void setWings(boolean wings){
+        this.wings = wings;
+    }
+
     public String fly(){
         if(wings){
-            return getName() + " can fly!";
+            return super.getName() + " can fly!";
         }else{
-            return getName() + " cannot fly!";
+            return super.getName() + " cannot fly!";
         }
+    }
+
+    public void setTeleport(boolean canTeleport){
+        this.canTeleport = canTeleport;
     }
 
     public String teleport(String toPlace){
         if(canTeleport){
-            return getName() + " teleported to " + toPlace + "!";
+            return super.getName() + " teleported to " + toPlace + "!";
         }else{
-            return getName() + " cannot teleport!";
+            return super.getName() + " cannot teleport!";
         }
     }
 }
