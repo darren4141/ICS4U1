@@ -3,6 +3,8 @@ package Lessons.Inheritance;
 public class SuperAnimal extends Animal{
     private boolean wings;
     private boolean canTeleport;
+    private boolean laserEyes;
+    private String laserEyesColour;
 
     public SuperAnimal(){
         super.setName("default");
@@ -71,6 +73,22 @@ public class SuperAnimal extends Animal{
             return super.getName() + " teleported to " + toPlace + "!";
         }else{
             return super.getName() + " cannot teleport!";
+        }
+    }
+
+    public void setLaserEyes(boolean laserEyes){
+        this.laserEyes = laserEyes;
+    }
+
+    public void setLaserEyesColour(String laserEyesColour){
+        this.laserEyesColour = laserEyesColour;
+    }
+
+    public String shootLaserEyes(){
+        if(laserEyes){
+            return super.getName() + " is shooting " + laserEyesColour + " lasers from its eyes!";
+        }else{
+            return super.getName() + " cannot shoot lasers...";
         }
     }
 }
